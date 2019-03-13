@@ -1,0 +1,57 @@
+body {
+    background-color: black
+}
+
+.loginCard {
+    height: 60vh;
+    width: 40vw;
+    background-color: white;
+    margin: 0 auto;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 20vh;
+}
+
+.is-fullheight {
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: stretch;
+    margin-top: 0 !important;
+    overflow-y: auto;
+}
+
+.column {
+    background-size: auto;
+    background-repeat: no-repeat;
+}
+
+.outer {
+    height: 100vh;
+    width: 100vw;
+}
+
+.headtext {
+    font-size: 3rem;
+}
+
+.lowertext {
+    font-size: 1.2rem;
+    margin-bottom: 3vh;
+}
+
+.blackbutton {
+    background-color: transparent !important;
+    transition: 0.15s !important;
+    border-color: #303030 !important;
+    border: 2px solid;
+    color: #303030 !important;
+    box-shadow: 0 2px 4px 0 rgba(136, 144, 195, 0.2), 0 5px 15px 0 rgba(37, 44, 97, 0.15) !important;
+    margin-bottom: 1.5vh
+}
+
+.blackbutton:hover, .blackbutton:focus {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 8px 0 rgba(136, 144, 195, 0.22), 0 8px 15px 0 rgba(37, 44, 97, 0.17);
+}

@@ -6,6 +6,7 @@
     * Social sign-in
     * Very simple
     * Should not take much time at all
+    * https://dribbble.com/shots/5485808-Rang-Login-UI this looks pretty dece
 * Backend
     * Similar UI to FB messenger
     * __FOCUSED__ around CHAT!!
