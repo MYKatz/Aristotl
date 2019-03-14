@@ -19,7 +19,6 @@ class Login extends Component {
     const authenticated = await this.props.auth.isAuthenticated();
     if (authenticated !== this.state.authenticated) {
       this.setState({ authenticated });
-      this.setState({ display: "plz" });
     }
   }
 
@@ -51,23 +50,10 @@ class Login extends Component {
                 <Twemoji text="Welcome! 👋" className="headtext"/>
                 <div className="lowertext">Please login to continue</div>
                 <div>
-                  <div class="field">
-                    <label class="label">Email Address</label>
-                    <div class="control">
-                      <input class="input" type="email"/>
-                    </div>
-                  </div>
-                  <div class="field" style={{paddingBottom: "1vh"}}>
-                    <label class="label">Password</label>
-                    <div class="control">
-                      <input class="input" type="password"/>
-                    </div>
-                  </div>
                   <button className="button is-medium is-fullwidth blackbutton" onClick={this.login}>Login</button>
-                  <button className="button is-medium is-fullwidth blackbutton">Register</button>
+                  <a href="https://dev-994297.okta.com/signin/register" className="button is-medium is-fullwidth blackbutton">Register</a>
                   <button className="button is-danger is-outlined is-fullwidth" style={{marginBottom: "1vh"}}>Sign-in with Google</button>
                   <button className="button is-link is-outlined is-fullwidth">Sign-in with Facebook</button>
-                  <span>{this.state.display}</span>
                 </div>
               </div>
               <div className="column"/>
