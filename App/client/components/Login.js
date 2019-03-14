@@ -2,9 +2,41 @@ import React, { Component } from 'react';
 import { Twemoji } from 'react-emoji-render';
 import Pattern from '../img/backgrounds/ab14.png'
 import '../css/login.css';
+import { withAuth } from '@okta/okta-react';
 
 
 class Login extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { authenticated: null, display: "yo" };
+    this.checkAuthentication = this.checkAuthentication.bind(this);
+    this.checkAuthentication();
+    this.login = this.login.bind(this);
+    this.logout = this.logout.bind(this);
+  }
+
+  async checkAuthentication() {
+    const authenticated = await this.props.auth.isAuthenticated();
+    if (authenticated !== this.state.authenticated) {
+      this.setState({ authenticated });
+      this.setState({ display: "plz" });
+    }
+  }
+
+  componentDidUpdate() {
+    this.checkAuthentication();
+  }
+
+  async login() {
+    // Redirect to '/' after login
+    this.props.auth.login('/');
+  }
+
+  async logout() {
+    // Redirect to '/' after logout
+    this.props.auth.logout('/');
+  }
+
   render() {
     return (
       <div className="outer">
@@ -18,7 +50,7 @@ class Login extends Component {
               <div className="column is-two-thirds">
                 <Twemoji text="Welcome! 👋" className="headtext"/>
                 <div className="lowertext">Please login to continue</div>
-                <form>
+                <div>
                   <div class="field">
                     <label class="label">Email Address</label>
                     <div class="control">
@@ -31,11 +63,12 @@ class Login extends Component {
                       <input class="input" type="password"/>
                     </div>
                   </div>
-                  <button className="button is-medium is-fullwidth blackbutton">Login</button>
+                  <button className="button is-medium is-fullwidth blackbutton" onClick={this.login}>Login</button>
                   <button className="button is-medium is-fullwidth blackbutton">Register</button>
                   <button className="button is-danger is-outlined is-fullwidth" style={{marginBottom: "1vh"}}>Sign-in with Google</button>
                   <button className="button is-link is-outlined is-fullwidth">Sign-in with Facebook</button>
-                </form>
+                  <span>{this.state.display}</span>
+                </div>
               </div>
               <div className="column"/>
             </div>
@@ -48,4 +81,4 @@ class Login extends Component {
   }
 }
 
-export default Login;
+export default withAuth(Login);
