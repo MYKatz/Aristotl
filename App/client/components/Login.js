@@ -31,8 +31,10 @@ class Login extends Component {
                       <input class="input" type="password"/>
                     </div>
                   </div>
-                  <button class="button is-medium is-fullwidth blackbutton">Login</button>
-                  <button class="button is-medium is-fullwidth blackbutton">Register</button>
+                  <button className="button is-medium is-fullwidth blackbutton">Login</button>
+                  <button className="button is-medium is-fullwidth blackbutton">Register</button>
+                  <button className="button is-danger is-outlined is-fullwidth" style={{marginBottom: "1vh"}}>Sign-in with Google</button>
+                  <button className="button is-link is-outlined is-fullwidth">Sign-in with Facebook</button>
                 </form>
               </div>
               <div className="column"/>
