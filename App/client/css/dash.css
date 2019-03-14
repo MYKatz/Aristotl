@@ -1,0 +1,46 @@
+.sidemenu {
+    background-color: #ededf7;
+    padding-right: 0px;
+}
+
+.chatinterface {
+    background-color: white;
+}
+
+.is-fullheight {
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: stretch;
+    margin-top: 0 !important;
+    overflow-y: auto;
+}
+
+.fullpage {
+    height: 100vh;
+}
+
+.menu-list li{
+    text-align: center;
+}
+
+.blackbutton {
+    background-color: white !important;
+    transition: 0.15s !important;
+    border-color: #303030 !important;
+    border: 2px solid;
+    color: #303030 !important;
+    box-shadow: 0 2px 4px 0 rgba(136, 144, 195, 0.2), 0 5px 15px 0 rgba(37, 44, 97, 0.15) !important;
+    margin-bottom: 1.5vh;
+    width: 90%;
+}
+
+.blackbutton:hover, .blackbutton:focus {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 8px 0 rgba(136, 144, 195, 0.22), 0 8px 15px 0 rgba(37, 44, 97, 0.17);
+}
+
+.bottomcontainer {
+    text-align: center;
+    margin-top: 40vh;
+}

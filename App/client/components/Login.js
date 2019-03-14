@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Twemoji } from 'react-emoji-render';
-import Pattern from '../img/backgrounds/ab14.png'
+import Pattern from '../img/backgrounds/ab14.png';
 import '../css/login.css';
 import { withAuth } from '@okta/okta-react';
 

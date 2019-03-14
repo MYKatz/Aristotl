@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
-import Login from "./Login"
 import '../css/App.css';
 import '../css/bulma.min.css';
 import { Security, ImplicitCallback, SecureRoute } from '@okta/okta-react';
+
+import Login from "./Login";
+import Dash from "./Dash";
 
 const config = {
   issuer: 'https://dev-994297.okta.com/oauth2/default',
@@ -21,7 +23,7 @@ class App extends Component {
         >
           <Route path="/" exact component={Login} />
           <Route path='/implicit/callback' component={ImplicitCallback}/>
-          <SecureRoute path="/hello" component={Login}/>
+          <SecureRoute path="/hello" component={Dash}/>
         </Security>
       </Router>
     );
