@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import '../css/chatboard.css';
+import CanvasDraw from "react-canvas-draw";
 import { withAuth } from '@okta/okta-react';
 
 class ChatBoard extends Component{
@@ -9,10 +10,15 @@ class ChatBoard extends Component{
         this.messagesScrollToBottom = this.messagesScrollToBottom.bind(this);
         this._handleKeyPress = this._handleKeyPress.bind(this);
         this._handleChange = this._handleChange.bind(this);
+        this._handleResize = this._handleResize.bind(this);
+        this._handleClick = this._handleClick.bind(this);
+        this.whiteboardRef = React.createRef();
         this.state = {
             messages : [],
             messagejsx : [],
-            inputvalue : ''
+            inputvalue : '',
+            whiteboardHeight: 400,
+            whiteboardWidth: 400
         }
     }
 
@@ -33,6 +39,15 @@ class ChatBoard extends Component{
         this.messagesScrollToBottom();
     }
 
+    componentDidMount() {
+        this._handleResize();
+        window.addEventListener('resize', this._handleResize);
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener('resize', this._handleResize);
+    }
+
     _handleKeyPress(e){
         if(e.key === "Enter" && this.state.inputvalue != ''){
             this.updateMessages();
@@ -41,6 +56,24 @@ class ChatBoard extends Component{
 
     _handleChange(c){
         this.setState({inputvalue: c.target.value});
+    }
+
+    _handleClick(c){
+        //handle right click
+        console.log(c.type);
+        if(c.type === "contextmenu"){
+            c.preventDefault();
+            console.log("RIGHT PRESSED");
+            this.whiteboardRef.clear();
+        }
+        return false;
+    }
+
+    _handleResize(){
+        this.setState({
+            whiteboardHeight: document.getElementById('wb').clientHeight,
+            whiteboardWidth: document.getElementById('wb').clientWidth,
+        });
     }
 
 
@@ -62,8 +95,8 @@ class ChatBoard extends Component{
                         <input className="input is-rounded typemsg" type="text" value={this.state.inputvalue} onChange={this._handleChange} onKeyPress={this._handleKeyPress} placeholder="Type a message..."/>
                     </div>
                 </div>
-                <div className="column whiteboard">
-
+                <div className="column whiteboard" id="wb" onContextMenu={this._handleClick}>
+                    <CanvasDraw ref={canvasDraw => (this.whiteboardRef = canvasDraw)} canvasHeight={this.state.whiteboardHeight} canvasWidth={this.state.whiteboardWidth} brushRadius={2} lazyRadius={0}/>
 
                 </div>
             </div>
