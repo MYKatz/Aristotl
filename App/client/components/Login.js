@@ -28,7 +28,7 @@ class Login extends Component {
 
   async login() {
     // Redirect to '/' after login
-    this.props.auth.login('/');
+    this.props.auth.login('/dash');
   }
 
   async logout() {

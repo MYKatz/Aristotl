@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { Twemoji } from 'react-emoji-render';
 import '../css/dash.css';
 import { withAuth } from '@okta/okta-react';
+
+import ChatBoard from "./ChatBoard";
 
 class Dash extends Component {
     constructor(props) {
@@ -31,7 +32,7 @@ class Dash extends Component {
                         </div>
                         <aside className="menu">
                             <ul className="menu-list">
-                                <li><a>Home</a></li>
+                                <li><a className="is-active">Home</a></li>
                                 <li><a>Settings</a></li>
                                 <li><a>One</a></li>
                                 <li><a>Two</a></li>
@@ -41,9 +42,8 @@ class Dash extends Component {
                             <button className="button is-medium is-fullwidth blackbutton">Logout</button>
                         </div>
                     </div>
-                    <div className="column chatinterface">
-                    
-                    
+                    <div className="column" style={{paddingTop: 0, paddingBottom: 0}}>
+                        <ChatBoard />
                     </div>
                 </div>
             </div>

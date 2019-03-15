@@ -7,6 +7,10 @@
     background-color: white;
 }
 
+.whiteboard {
+    
+}
+
 .is-fullheight {
     height: 100%;
     display: flex;
@@ -44,3 +48,4 @@
     text-align: center;
     margin-top: 40vh;
 }
+

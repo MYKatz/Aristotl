@@ -23,7 +23,7 @@ class App extends Component {
         >
           <Route path="/" exact component={Login} />
           <Route path='/implicit/callback' component={ImplicitCallback}/>
-          <SecureRoute path="/hello" component={Dash}/>
+          <SecureRoute path="/dash" component={Dash}/>
         </Security>
       </Router>
     );
