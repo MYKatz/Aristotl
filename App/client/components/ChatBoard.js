@@ -12,6 +12,7 @@ class ChatBoard extends Component{
         this._handleChange = this._handleChange.bind(this);
         this._handleResize = this._handleResize.bind(this);
         this._handleClick = this._handleClick.bind(this);
+        this._handleUp = this._handleUp.bind(this);
         this.whiteboardRef = React.createRef();
         this.state = {
             messages : [],
@@ -48,6 +49,15 @@ class ChatBoard extends Component{
         window.removeEventListener('resize', this._handleResize);
     }
 
+    _handleUp(e){
+        //after mouse leftclick is released
+        if(e.nativeEvent.which === 1){
+            //right now just outputs the line object... later it will send it over websockets.
+            var lines = JSON.parse(this.whiteboardRef.getSaveData()).lines;
+            console.log(lines[lines.length - 1]);
+        }
+    }
+
     _handleKeyPress(e){
         if(e.key === "Enter" && this.state.inputvalue != ''){
             this.updateMessages();
@@ -60,10 +70,8 @@ class ChatBoard extends Component{
 
     _handleClick(c){
         //handle right click
-        console.log(c.type);
         if(c.type === "contextmenu"){
             c.preventDefault();
-            console.log("RIGHT PRESSED");
             this.whiteboardRef.clear();
         }
         return false;
@@ -95,7 +103,7 @@ class ChatBoard extends Component{
                         <input className="input is-rounded typemsg" type="text" value={this.state.inputvalue} onChange={this._handleChange} onKeyPress={this._handleKeyPress} placeholder="Type a message..."/>
                     </div>
                 </div>
-                <div className="column whiteboard" id="wb" onContextMenu={this._handleClick}>
+                <div className="column whiteboard" id="wb" onMouseUp={this._handleUp} onContextMenu={this._handleClick}>
                     <CanvasDraw ref={canvasDraw => (this.whiteboardRef = canvasDraw)} canvasHeight={this.state.whiteboardHeight} canvasWidth={this.state.whiteboardWidth} brushRadius={2} lazyRadius={0}/>
 
                 </div>
