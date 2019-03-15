@@ -1,0 +1,16 @@
+.msgBoard {
+    height: 100%;
+    display: table
+}
+
+.msgContent {
+    max-height: 95%;
+    display: table-cell;
+    vertical-align: bottom;
+    overflow: hidden;
+}
+
+.boardContainer {
+    overflow: scroll;
+    height: 95%;
+}
