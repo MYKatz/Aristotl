@@ -14,7 +14,8 @@ const io = require('socket.io')();
 io.on("connection", function(socket){
     console.log("User connected");
     socket.on("chat", function(msg){
-        io.emit("chat", msg);
+        socket.broadcast.emit("chat", msg);
+        console.log(msg);
     })
 });
 

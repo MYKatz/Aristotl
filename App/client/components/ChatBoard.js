@@ -10,6 +10,7 @@ class ChatBoard extends Component{
     constructor(props){
         super(props);
         this.updateMessages = this.updateMessages.bind(this);
+        this.sendMessage = this.sendMessage.bind(this);
         this.messagesScrollToBottom = this.messagesScrollToBottom.bind(this);
         this._handleKeyPress = this._handleKeyPress.bind(this);
         this._handleChange = this._handleChange.bind(this);
@@ -17,7 +18,7 @@ class ChatBoard extends Component{
         this._handleClick = this._handleClick.bind(this);
         this._handleUp = this._handleUp.bind(this);
         this.whiteboardRef = React.createRef();
-        const socket = openSocket('http://localhost:8001');
+        this.socket = openSocket('http://localhost:8001');
         this.state = {
             messages : [],
             messagejsx : [],
@@ -28,6 +29,14 @@ class ChatBoard extends Component{
     }
 
     updateMessages(msg){
+        var msglist = [...this.state.messages, msg].map((message) =>
+            <MessageBubble text={message} type="othermsg" />
+        )
+        this.setState({messagejsx: msglist}, this.messagesScrollToBottom());
+        this.setState({messages: [...this.state.messages, msg]});
+    }
+
+    sendMessage(msg){
         var msglist = [...this.state.messages, msg].map((message) =>
             <MessageBubble text={message} type="usermsg" />
         )
@@ -48,9 +57,7 @@ class ChatBoard extends Component{
         this._handleResize();
         window.addEventListener('resize', this._handleResize);
         //socket handling
-        //this.socket.on('chat', function(msg){
-
-        //});
+        this.socket.on('chat', this.updateMessages);
     }
 
     componentWillUnmount() {
@@ -69,7 +76,8 @@ class ChatBoard extends Component{
 
     _handleKeyPress(e){
         if(e.key === "Enter" && this.state.inputvalue != ''){
-            this.updateMessages(this.state.inputvalue);
+            this.socket.emit('chat', this.state.inputvalue);
+            this.sendMessage(this.state.inputvalue);
         }
     }
 
@@ -92,7 +100,6 @@ class ChatBoard extends Component{
             whiteboardWidth: document.getElementById('wb').clientWidth,
         });
     }
-
 
     render() {
         return(
