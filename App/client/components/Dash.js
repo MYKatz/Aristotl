@@ -3,6 +3,7 @@ import '../css/dash.css';
 import { withAuth } from '@okta/okta-react';
 
 import ChatBoard from "./ChatBoard";
+import Menu from "./elements/Menu";
 
 class Dash extends Component {
     constructor(props) {
@@ -10,6 +11,7 @@ class Dash extends Component {
         this.state = {
             filler : null
         }
+        //refs
     }
 
     render(){
@@ -30,15 +32,7 @@ class Dash extends Component {
                                 <strong>Name McNameFace</strong>
                             </div>
                         </div>
-                        <aside className="menu">
-                            <ul className="menu-list">
-                                <li><a className="is-active">Home</a></li>
-                                <li><a>Settings</a></li>
-                                <li><a>History</a></li>
-                                <li><a>One</a></li>
-                                <li><a>Two</a></li>
-                            </ul>
-                        </aside>
+                        <Menu items={["Home", "Settings", "History", "One", "Two"]}/>
                         <div className="bottomcontainer">
                             {/* <button className="button is-medium is-fullwidth blackbutton">Logout</button> */}
                         </div>

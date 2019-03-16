@@ -44,7 +44,7 @@ class Login extends Component {
   }
 
   async glogin() {
-    //FB login w/ idp ID from Okta
+    //Google login w/ idp ID from Okta
     this.props.auth.login('/dash', {idp: 	"0oacyltq2wgHWCUaS356"});
   }
 
