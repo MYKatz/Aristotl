@@ -9,17 +9,24 @@ class Dash extends Component {
     constructor(props) {
         super(props);
         this.setMainComponent = this.setMainComponent.bind(this);
+        this.checkAuth = this.checkAuth.bind(this);
         this.components = [<ChatBoard/>, <div>example1</div>, <div>example2</div>, <div>example3</div>, <div>example4</div>];
         this.state = {
             filler : null,
-            activeComponent : 0
-        }
-        //refs
+            activeComponent : 0,
+            name: "User Name"
+        };
+        this.checkAuth();
     }
 
     setMainComponent(ind){
         //this.setState({activeComponent: this.components[ind]});
         this.setState({activeComponent: ind});
+    }
+
+    async checkAuth(){
+        const user = await this.props.auth.getUser();
+        this.setState({name: user.name});
     }
 
     render(){
@@ -37,7 +44,7 @@ class Dash extends Component {
                         </div>
                         <div className="level">
                             <div className="level-item">
-                                <strong>Name McNameFace</strong>
+                                <strong>{this.state.name}</strong>
                             </div>
                         </div>
                         <Menu setMain={this.setMainComponent} items={["Home", "Settings", "History", "One", "Two"]}/>

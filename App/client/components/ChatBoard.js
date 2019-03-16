@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import '../css/chatboard.css';
 import CanvasDraw from "react-canvas-draw";
 import { withAuth } from '@okta/okta-react';
+import openSocket from 'socket.io-client';
 
 import MessageBubble from "./elements/MessageBubble";
 
@@ -16,6 +17,7 @@ class ChatBoard extends Component{
         this._handleClick = this._handleClick.bind(this);
         this._handleUp = this._handleUp.bind(this);
         this.whiteboardRef = React.createRef();
+        const socket = openSocket('http://localhost:8001');
         this.state = {
             messages : [],
             messagejsx : [],
@@ -25,12 +27,12 @@ class ChatBoard extends Component{
         }
     }
 
-    updateMessages(){
-        var msglist = [...this.state.messages, this.state.inputvalue].map((message) =>
+    updateMessages(msg){
+        var msglist = [...this.state.messages, msg].map((message) =>
             <MessageBubble text={message} type="usermsg" />
         )
         this.setState({messagejsx: msglist}, this.messagesScrollToBottom());
-        this.setState({messages: [...this.state.messages, this.state.inputvalue]});
+        this.setState({messages: [...this.state.messages, msg]});
         this.setState({inputvalue: ""});
     }
 
@@ -45,6 +47,10 @@ class ChatBoard extends Component{
     componentDidMount() {
         this._handleResize();
         window.addEventListener('resize', this._handleResize);
+        //socket handling
+        //this.socket.on('chat', function(msg){
+
+        //});
     }
 
     componentWillUnmount() {
@@ -63,7 +69,7 @@ class ChatBoard extends Component{
 
     _handleKeyPress(e){
         if(e.key === "Enter" && this.state.inputvalue != ''){
-            this.updateMessages();
+            this.updateMessages(this.state.inputvalue);
         }
     }
 
