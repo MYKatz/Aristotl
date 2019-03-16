@@ -13,6 +13,7 @@ class Login extends Component {
     this.checkAuthentication();
     this.login = this.login.bind(this);
     this.logout = this.logout.bind(this);
+    this.fblogin = this.fblogin.bind(this);
   }
 
   async checkAuthentication() {
@@ -36,6 +37,10 @@ class Login extends Component {
     this.props.auth.logout('/');
   }
 
+  async fblogin() {
+    this.props.auth.login('/dash', {idp: 	"0oacyiupocl7wF23w356"});
+  }
+
   render() {
     return (
       <div className="outer">
@@ -53,7 +58,7 @@ class Login extends Component {
                   <button className="button is-medium is-fullwidth blackbutton" onClick={this.login}>Login</button>
                   <a href="https://dev-994297.okta.com/signin/register" className="button is-medium is-fullwidth blackbutton">Register</a>
                   <button className="button is-danger is-outlined is-fullwidth" style={{marginBottom: "1vh"}}>Sign-in with Google</button>
-                  <button className="button is-link is-outlined is-fullwidth">Sign-in with Facebook</button>
+                  <a className="button is-link is-outlined is-fullwidth" onClick={this.fblogin}>Sign-in with Facebook</a>
                 </div>
               </div>
               <div className="column"/>

@@ -10,7 +10,10 @@ import Dash from "./Dash";
 const config = {
   issuer: 'https://dev-994297.okta.com/oauth2/default',
   redirect_uri: 'http://localhost:8000/implicit/callback',
-  client_id: '0oacpwujcUNre4PDC356'
+  client_id: '0oacpwujcUNre4PDC356',
+  idps: [
+    {type: 'FACEBOOK', id: '0oacyiupocl7wF23w356'}
+  ]
 }
 
 class App extends Component {
