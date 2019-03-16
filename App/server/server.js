@@ -17,6 +17,9 @@ io.on("connection", function(socket){
         socket.broadcast.emit("chat", msg);
         console.log(msg);
     })
+    socket.on("draw", function(drawing){
+        socket.broadcast.emit("draw", drawing);
+    });
 });
 
 io.listen(8001); //listen on port 8001

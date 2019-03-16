@@ -10,6 +10,7 @@ class ChatBoard extends Component{
     constructor(props){
         super(props);
         this.updateMessages = this.updateMessages.bind(this);
+        this.updateWhiteboard = this.updateWhiteboard.bind(this);
         this.sendMessage = this.sendMessage.bind(this);
         this.messagesScrollToBottom = this.messagesScrollToBottom.bind(this);
         this._handleKeyPress = this._handleKeyPress.bind(this);
@@ -45,6 +46,10 @@ class ChatBoard extends Component{
         this.setState({inputvalue: ""});
     }
 
+    updateWhiteboard(drawing){
+        this.whiteboardRef.loadSaveData(drawing, true);
+    }
+
     messagesScrollToBottom(){
         this.messagesEnd.scrollIntoView();
     }
@@ -58,6 +63,7 @@ class ChatBoard extends Component{
         window.addEventListener('resize', this._handleResize);
         //socket handling
         this.socket.on('chat', this.updateMessages);
+        this.socket.on('draw', this.updateWhiteboard);
     }
 
     componentWillUnmount() {
@@ -69,6 +75,7 @@ class ChatBoard extends Component{
         if(e.nativeEvent.which === 1){
             //right now just outputs the line object... later it will send it over websockets.
             //make sure to handle if undefined.
+            this.socket.emit('draw', this.whiteboardRef.getSaveData());
             var lines = JSON.parse(this.whiteboardRef.getSaveData()).lines;
             console.log(lines[lines.length - 1]);
         }
