@@ -3,6 +3,8 @@ import '../css/chatboard.css';
 import CanvasDraw from "react-canvas-draw";
 import { withAuth } from '@okta/okta-react';
 
+import MessageBubble from "./elements/MessageBubble";
+
 class ChatBoard extends Component{
     constructor(props){
         super(props);
@@ -25,7 +27,7 @@ class ChatBoard extends Component{
 
     updateMessages(){
         var msglist = [...this.state.messages, this.state.inputvalue].map((message) =>
-            <div>{message}</div>
+            <MessageBubble text={message} type="usermsg" />
         )
         this.setState({messagejsx: msglist}, this.messagesScrollToBottom());
         this.setState({messages: [...this.state.messages, this.state.inputvalue]});
@@ -53,6 +55,7 @@ class ChatBoard extends Component{
         //after mouse leftclick is released
         if(e.nativeEvent.which === 1){
             //right now just outputs the line object... later it will send it over websockets.
+            //make sure to handle if undefined.
             var lines = JSON.parse(this.whiteboardRef.getSaveData()).lines;
             console.log(lines[lines.length - 1]);
         }
