@@ -8,10 +8,18 @@ import Menu from "./elements/Menu";
 class Dash extends Component {
     constructor(props) {
         super(props);
+        this.setMainComponent = this.setMainComponent.bind(this);
+        this.components = [<ChatBoard/>, <div>example1</div>, <div>example2</div>, <div>example3</div>, <div>example4</div>];
         this.state = {
-            filler : null
+            filler : null,
+            activeComponent : 0
         }
         //refs
+    }
+
+    setMainComponent(ind){
+        //this.setState({activeComponent: this.components[ind]});
+        this.setState({activeComponent: ind});
     }
 
     render(){
@@ -32,13 +40,13 @@ class Dash extends Component {
                                 <strong>Name McNameFace</strong>
                             </div>
                         </div>
-                        <Menu items={["Home", "Settings", "History", "One", "Two"]}/>
+                        <Menu setMain={this.setMainComponent} items={["Home", "Settings", "History", "One", "Two"]}/>
                         <div className="bottomcontainer">
                             {/* <button className="button is-medium is-fullwidth blackbutton">Logout</button> */}
                         </div>
                     </div>
                     <div className="column" style={{paddingTop: 0, paddingBottom: 0}}>
-                        <ChatBoard />
+                        {this.components[this.state.activeComponent]}
                     </div>
                 </div>
             </div>

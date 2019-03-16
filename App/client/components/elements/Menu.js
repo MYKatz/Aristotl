@@ -31,7 +31,7 @@ class Menu extends Component {
         this.makeItems(ind);
         this.setState({activeIndex: ind});
         //forward again up to parent.
-        // write later
+        this.props.setMain(ind);
     }
 
     async logout() {
