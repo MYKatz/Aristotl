@@ -23,7 +23,7 @@ class App extends Component {
       <Router>
         <Security issuer={config.issuer}
                   client_id={config.client_id}
-                  scope={['openid', 'email', 'profile', 'groups', 'id_token', 'access_token']}
+                  scope={['openid', 'email', 'profile', 'groups']}
                   redirect_uri={config.redirect_uri}
         >
           <Route path="/" exact component={Login} />
