@@ -11,6 +11,7 @@ const config = {
   issuer: 'https://dev-994297.okta.com/oauth2/default',
   redirect_uri: 'http://localhost:8000/implicit/callback',
   client_id: '0oacpwujcUNre4PDC356',
+  scope: ['openid', 'email', 'profile', 'groups'],
   idps: [
     {type: 'FACEBOOK', id: '0oacyiupocl7wF23w356'}
   ]
@@ -22,6 +23,7 @@ class App extends Component {
       <Router>
         <Security issuer={config.issuer}
                   client_id={config.client_id}
+                  scope={['openid', 'email', 'profile', 'groups', 'id_token', 'access_token']}
                   redirect_uri={config.redirect_uri}
         >
           <Route path="/" exact component={Login} />

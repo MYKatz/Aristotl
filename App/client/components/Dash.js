@@ -3,6 +3,7 @@ import '../css/dash.css';
 import { withAuth } from '@okta/okta-react';
 
 import ChatBoard from "./ChatBoard";
+import Settings from "./Settings";
 import Menu from "./elements/Menu";
 
 class Dash extends Component {
@@ -10,7 +11,7 @@ class Dash extends Component {
         super(props);
         this.setMainComponent = this.setMainComponent.bind(this);
         this.checkAuth = this.checkAuth.bind(this);
-        this.components = [<ChatBoard/>, <div>example1</div>, <div>example2</div>, <div>example3</div>, <div>example4</div>];
+        this.components = [<ChatBoard/>, <Settings/>, <div>example2</div>, <div>example3</div>, <div>example4</div>];
         this.state = {
             filler : null,
             activeComponent : 0,
@@ -52,7 +53,7 @@ class Dash extends Component {
                             {/* <button className="button is-medium is-fullwidth blackbutton">Logout</button> */}
                         </div>
                     </div>
-                    <div className="column" style={{paddingTop: 0, paddingBottom: 0}}>
+                    <div className="column" style={{paddingTop: 0, paddingBottom: 0, background: "white"}}>
                         {this.components[this.state.activeComponent]}
                     </div>
                 </div>

@@ -25,7 +25,8 @@ class ChatBoard extends Component{
             messagejsx : [],
             inputvalue : '',
             whiteboardHeight: 400,
-            whiteboardWidth: 400
+            whiteboardWidth: 400,
+            room: ""
         }
     }
 
@@ -83,8 +84,13 @@ class ChatBoard extends Component{
 
     _handleKeyPress(e){
         if(e.key === "Enter" && this.state.inputvalue != ''){
-            this.socket.emit('chat', this.state.inputvalue);
-            this.sendMessage(this.state.inputvalue);
+            if(this.state.inputvalue[0] == '/'){
+                //handle commands
+            }
+            else{
+                this.socket.emit('chat', this.state.inputvalue);
+                this.sendMessage(this.state.inputvalue);
+            }
         }
     }
 
