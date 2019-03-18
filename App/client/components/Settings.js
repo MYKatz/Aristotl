@@ -19,8 +19,10 @@ class Settings extends Component{
         this.renderGradeLevels = this.renderGradeLevels.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleChange = this.handleChange.bind(this);
+        this.formatSubjects = this.formatSubjects.bind(this);
+        this.reloadPage = this.reloadPage.bind(this);
         this.state = {
-            userdata : {},
+            userData : {},
             isStudent : null,
             doneLoading : false,
             innerGradeLevels : [],
@@ -48,8 +50,7 @@ class Settings extends Component{
           });
           const responsedata = await response.json();
           console.log(responsedata);
-          this.forceUpdate()
-          //gotta force a refresh.. figure out how to do that.
+          this.reloadPage();
         } catch (err) {
           // handle error as needed
         }
@@ -59,8 +60,15 @@ class Settings extends Component{
         this.setState({subjects : selectedOptions})
     }
 
+    reloadPage(){
+        console.log("reloading");
+        window.location.reload(true);
+    }
+
     async checkGroup(){
         const user = await this.props.auth.getUser();
+        console.log(user);
+        this.formatSubjects(user.subjects);
         this.setState({userData: user});
         if(user.groups.includes("Students")){
             //render Student settings page
@@ -70,11 +78,11 @@ class Settings extends Component{
             //render Tutor settings page
             this.setState({isStudent: false});
         }
-        this.setState({doneLoading: true}, () => this.renderGradeLevels(user.gradelevel));
+        this.setState({doneLoading: true}, () => this.renderGradeLevels(user.gradeLevel));
     }
 
     renderGradeLevels(gl){
-        var gradelevel = gl || 0
+        var gradelevel = gl || 0;
         var jsxa = []
         for(var i=1; i<13; i++){
             if(i == gradelevel){
@@ -87,6 +95,15 @@ class Settings extends Component{
         this.setState({innerGradeLevels: jsxa})
     }
 
+    formatSubjects(arr){
+        //takes array of subjects ['math', 'english', ...] and converts them to react-select formatting
+        var newarr = []
+        arr.forEach(function(elem){
+            newarr.push({value: elem, label: elem.charAt(0).toUpperCase() + elem.slice(1)});
+        });
+        this.setState({defaultSubjects: newarr});
+    }
+
     render(){
         return(
             <div>
@@ -97,7 +114,7 @@ class Settings extends Component{
                             <div className="columns">
                                 <div className="column is-one-fifth"></div>
                                 <div className="column is-three-fifths">
-                                    <form>
+                                    <form onSubmit={this.handleSubmit}>
                                         <div className="field">
                                             <label className="label">Name</label>
                                             <div className="control">
@@ -109,7 +126,7 @@ class Settings extends Component{
                                             <label className="label">Grade level</label>
                                             <div className="control">
                                                 <div className="select">
-                                                <select>
+                                                <select name="gradeLevel">
                                                     {this.state.innerGradeLevels}
                                                 </select>
                                                 </div>
@@ -120,7 +137,7 @@ class Settings extends Component{
                                             <label className="label">Account type</label>
                                             <div className="control">
                                                 <div className="select">
-                                                <select>
+                                                <select name="type">
                                                     <option selected="selected">Student</option>
                                                     <option>Tutor</option>
                                                 </select>
@@ -132,7 +149,7 @@ class Settings extends Component{
                                             <div className="field">
                                             <label className="label">Bio</label>
                                             <div className="control">
-                                                <textarea className="textarea" placeholder="Just another student..."></textarea>
+                                                <textarea className="textarea" placeholder="Just another student..." name="bio" defaultValue={this.state.userData.bio}></textarea>
                                             </div>
                                             </div>
 
@@ -175,14 +192,14 @@ class Settings extends Component{
                                             <div className="field">
                                             <label className="label">Bio</label>
                                             <div className="control">
-                                                <textarea className="textarea" placeholder="Just another tutor..." name="bio"></textarea>
+                                                <textarea className="textarea" placeholder="Just another tutor..." name="bio" defaultValue={this.state.userData.bio}></textarea>
                                             </div>
                                             </div>
 
                                             <div className="field">
                                             <label className="label">Subjects</label>
                                             <div className="control">
-                                                <Select options={tags} onChange={this.handleChange} isMulti className="basic-multi-select" classNamePrefix="select"/>
+                                                <Select options={tags} defaultValue={this.state.defaultSubjects} onChange={this.handleChange} isMulti className="basic-multi-select" classNamePrefix="select"/>
                                             </div>
                                             </div>
 

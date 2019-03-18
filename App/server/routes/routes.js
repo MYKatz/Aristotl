@@ -1,5 +1,6 @@
 var express = require('express');
 const OktaJwtVerifier = require('@okta/jwt-verifier');
+const okta = require('@okta/okta-sdk-nodejs');
 var router = express.Router();
 var path = require('path');
 
@@ -11,6 +12,15 @@ const oktaJwtVerifier = new OktaJwtVerifier({
     aud: 'api://default',
   },
 });
+
+//okta token 00jjwA-cffmIKzA_M50v-0Ke-R2hHNmMKJhXEoJyN3
+const oktaClient = new okta.Client({
+  orgUrl: "https://dev-994297.okta.com/",
+  token: "00jjwA-cffmIKzA_M50v-0Ke-R2hHNmMKJhXEoJyN3",
+  requestExecutor: new okta.DefaultRequestExecutor()
+});
+
+
 
 function authenticationRequired(req, res, next) {
   const authHeader = req.headers.authorization || '';
@@ -41,8 +51,17 @@ router.get('/*', function(req, res){
 });
 
 router.post('/api', authenticationRequired, function(req, res){
-  //res.json(req.jwt);
-  console.log(req.body);
+  oktaClient.getUser(req.jwt.claims.uid)
+  .then(user => {
+    user.profile.bio = req.body.bio;
+    user.profile.firstName = req.body.name.split(" ")[0];
+    user.profile.lastName = req.body.name.split(" ")[1];
+    user.profile.gradelevel = parseInt(req.body.gradeLevel);
+    var subjectsarr = req.body.subjects.map(x => x.value);
+    user.profile.subjects = subjectsarr;
+    user.update()
+    .then(() => res.send({good: "yes"}))
+  });
 });
 
 module.exports = router;
