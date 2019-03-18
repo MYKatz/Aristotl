@@ -4,7 +4,7 @@ import Select from 'react-select';
 
 
 const tags = [
-    {value: "english", label: "English"},
+    {value: "economics", label: "Economics"},
     {value: "math", label: "Math"},
     {value: "physics", label: "Physics"},
     {value: "chemistry", label: "Chemistry"},

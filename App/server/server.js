@@ -4,6 +4,7 @@ var router = require('./routes/routes.js')
 var path = require('path');
 var cors = require('cors');
 var bodyParser = require('body-parser');
+var dialogflow = require('./dialogflow.js');
 var app = express();
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended: true}));
@@ -13,6 +14,13 @@ app.use(express.static(path.join(__dirname, '../client')));
 app.use('/', router);
 app.use(cors());
 
+//dialogflow deets
+// Email address	dialogflow-fhiitq@newagent-e0a57.iam.gserviceaccount.com
+// Key ID   04573d62a9ad0cf52ac384f559dee4a5089ea55c
+//console.log(dialogflow);
+//var bee = new dialogflow();
+//bee.sendTextMessageToDialogFlow("hello", "rand");
+//console.log(l);
 
 
 //websocket stuff
