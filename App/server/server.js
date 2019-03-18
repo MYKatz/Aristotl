@@ -2,11 +2,18 @@
 var express = require('express');
 var router = require('./routes/routes.js')
 var path = require('path');
+var cors = require('cors');
+var bodyParser = require('body-parser');
 var app = express();
 app.set('view engine', 'ejs');
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json());
 app.set('views', path.join(__dirname, '../client'));
 app.use(express.static(path.join(__dirname, '../client')));
 app.use('/', router);
+app.use(cors());
+
+
 
 //websocket stuff
 const io = require('socket.io')();

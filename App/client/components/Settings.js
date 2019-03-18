@@ -17,19 +17,51 @@ class Settings extends Component{
         super(props)
         this.checkGroup = this.checkGroup.bind(this);
         this.renderGradeLevels = this.renderGradeLevels.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleChange = this.handleChange.bind(this);
         this.state = {
             userdata : {},
             isStudent : null,
             doneLoading : false,
-            innerGradeLevels : []
+            innerGradeLevels : [],
+            subjects : []
         }
         this.checkGroup();
+    }
+
+    async handleSubmit(e) {
+        e.preventDefault();
+        const data = new FormData(e.target);
+        var object = {subjects : this.state.subjects};
+        data.forEach(function(value, key){
+            object[key] = value;
+        });
+        var bodyjson = JSON.stringify(object);
+        try {
+          const response = await fetch('http://localhost:8000/api', {
+            headers: {
+              Authorization: 'Bearer ' + await this.props.auth.getAccessToken(),
+              "Content-Type": "application/json"
+            },
+            method: "POST",
+            body: bodyjson
+          });
+          const responsedata = await response.json();
+          console.log(responsedata);
+          this.forceUpdate()
+          //gotta force a refresh.. figure out how to do that.
+        } catch (err) {
+          // handle error as needed
+        }
+    }
+
+    handleChange(selectedOptions){
+        this.setState({subjects : selectedOptions})
     }
 
     async checkGroup(){
         const user = await this.props.auth.getUser();
         this.setState({userData: user});
-        console.log(user);
         if(user.groups.includes("Students")){
             //render Student settings page
             this.setState({isStudent: true});
@@ -52,7 +84,6 @@ class Settings extends Component{
                 jsxa.push(<option>{i}</option>)
             }
         }
-        console.log(jsxa);
         this.setState({innerGradeLevels: jsxa})
     }
 
@@ -70,7 +101,7 @@ class Settings extends Component{
                                         <div className="field">
                                             <label className="label">Name</label>
                                             <div className="control">
-                                                <input className="input" type="text" defaultValue={this.state.userData.name}/>
+                                                <input className="input" type="text" name="name" defaultValue={this.state.userData.name}/>
                                             </div>
                                             </div>
 
@@ -120,11 +151,11 @@ class Settings extends Component{
                             <div className="columns">
                                 <div className="column is-one-fifth"></div>
                                 <div className="column is-three-fifths">
-                                    <form>
+                                    <form onSubmit={this.handleSubmit}>
                                         <div className="field">
                                             <label className="label">Name</label>
                                             <div className="control">
-                                                <input className="input" type="text" defaultValue={this.state.userData.name}/>
+                                                <input className="input" type="text" name="name" defaultValue={this.state.userData.name}/>
                                             </div>
                                             </div>
 
@@ -132,7 +163,7 @@ class Settings extends Component{
                                             <label className="label">Account type</label>
                                             <div className="control">
                                                 <div className="select">
-                                                <select>
+                                                <select name="type">
                                                     <option>Student</option>
                                                     <option selected="selected">Tutor</option>
                                                 </select>
@@ -144,14 +175,14 @@ class Settings extends Component{
                                             <div className="field">
                                             <label className="label">Bio</label>
                                             <div className="control">
-                                                <textarea className="textarea" placeholder="Just another tutor..."></textarea>
+                                                <textarea className="textarea" placeholder="Just another tutor..." name="bio"></textarea>
                                             </div>
                                             </div>
 
                                             <div className="field">
                                             <label className="label">Subjects</label>
                                             <div className="control">
-                                                <Select options={tags} isMulti className="basic-multi-select" classNamePrefix="select"/>
+                                                <Select options={tags} onChange={this.handleChange} isMulti className="basic-multi-select" classNamePrefix="select"/>
                                             </div>
                                             </div>
 
