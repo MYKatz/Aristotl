@@ -18,6 +18,7 @@ class ChatBoard extends Component{
         this._handleResize = this._handleResize.bind(this);
         this._handleClick = this._handleClick.bind(this);
         this._handleUp = this._handleUp.bind(this);
+        this.getToken = this.getToken.bind(this);
         this.whiteboardRef = React.createRef();
         this.socket = openSocket('http://localhost:8001');
         this.state = {
@@ -65,6 +66,12 @@ class ChatBoard extends Component{
         //socket handling
         this.socket.on('chat', this.updateMessages);
         this.socket.on('draw', this.updateWhiteboard);
+        this.getToken();
+    }
+
+    async getToken(){
+        var userdata = await this.props.auth.getUser();
+        this.socket.emit('makeDetails', userdata);
     }
 
     componentWillUnmount() {
@@ -142,4 +149,4 @@ class ChatBoard extends Component{
 
 }
 
-export default ChatBoard;
+export default withAuth(ChatBoard);
