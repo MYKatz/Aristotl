@@ -70,7 +70,7 @@ class Settings extends Component{
         console.log(user);
         this.formatSubjects(user.subjects);
         this.setState({userData: user});
-        if(user.groups.includes("Students")){
+        if(!user.isTutor){
             //render Student settings page
             this.setState({isStudent: true});
         }

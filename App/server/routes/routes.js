@@ -57,6 +57,7 @@ router.post('/api', authenticationRequired, function(req, res){
     user.profile.firstName = req.body.name.split(" ")[0];
     user.profile.lastName = req.body.name.split(" ")[1];
     user.profile.gradelevel = parseInt(req.body.gradeLevel);
+    user.profile.isTutor = (req.body.type == "Tutor");
     var subjectsarr = req.body.subjects.map(x => x.value);
     user.profile.subjects = subjectsarr;
     user.update()

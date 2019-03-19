@@ -60,6 +60,7 @@ async function replyWithDialogFlow(socket, msg){
         newProblem.save(function(err, p){
             if(err){throw err}
             else{
+                console.log("hello");
                 currentSockets[socket.id].problem = p._id;
                 io.to(socket.id).emit("chat", "Someone is coming soon to help you with " + responses[0].queryResult.outputContexts[0].parameters.fields.problem_subject.stringValue);
             }
@@ -89,10 +90,16 @@ io.on("connection", function(socket){
     });
 
     socket.on("disconnect", function(){
-        Problem.findByIdAndUpdate(currentSockets[socket.id].problem, {isActive: false}, function(err, model){
-            if(err){throw err}
-            else{delete currentSockets[socket.id];}
-        })
+        if(currentSockets[socket.id]){
+            console.log("Flagging user's problem as inactive");
+            Problem.findByIdAndUpdate(currentSockets[socket.id].problem, {isActive: false}, function(err, model){
+                if(err){throw err}
+                else{delete currentSockets[socket.id];}
+            });
+        }
+        else{
+            delete currentSockets[socket.id];
+        }
     });
 });
 
