@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import '../css/dash.css';
 import { withAuth } from '@okta/okta-react';
-
+import { BrowserRouter as Router, Route, Redirect, Switch, withRouter} from "react-router-dom";
 import ChatBoard from "./ChatBoard";
 import Settings from "./Settings";
 import Menu from "./elements/Menu";
@@ -11,7 +11,8 @@ class Dash extends Component {
         super(props);
         this.setMainComponent = this.setMainComponent.bind(this);
         this.checkAuth = this.checkAuth.bind(this);
-        this.components = [<ChatBoard/>, <Settings/>, <div>example2</div>, <div>example3</div>, <div>example4</div>];
+        //this.components = [<ChatBoard/>, <Settings/>, <div>example2</div>, <div>example3</div>, <div>example4</div>];
+        this.components = ["/dash", "/dash/settings"];
         this.state = {
             filler : null,
             activeComponent : 0,
@@ -22,6 +23,8 @@ class Dash extends Component {
 
     setMainComponent(ind){
         //this.setState({activeComponent: this.components[ind]});
+        this.props.history.push(this.components[ind]);
+        //window.location.reload(true);
         this.setState({activeComponent: ind});
     }
 
@@ -32,7 +35,8 @@ class Dash extends Component {
 
     render(){
         return(
-            <div className="fullpage">
+            <Router>
+            <div className="fullpage" location={location}>
                 <div className="columns is-fullheight">
                     <div className="column is-one-fifth sidemenu">
                         <div className="level">
@@ -54,13 +58,19 @@ class Dash extends Component {
                         </div>
                     </div>
                     <div className="column" style={{paddingTop: 0, paddingBottom: 0, background: "white"}}>
-                        {this.components[this.state.activeComponent]}
+                        {/* {this.components[this.state.activeComponent]} */}
+                        <Switch>
+                            <Route path="/dash/settings" exact component={Settings} />
+                            <Route path="/two" render={() => <h3>Two</h3>} />
+                            <Route component={ChatBoard} />
+                        </Switch>
                     </div>
                 </div>
             </div>
+            </Router>
         )
     }
 
 }
 
-export default withAuth(Dash);
+export default withRouter(withAuth(Dash));

@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { withAuth } from '@okta/okta-react';
-
 import MenuItem from "./MenuItem";
-
+import { withRouter } from "react-router-dom";
 class Menu extends Component {
     constructor(props){
         //accepts this.props.items as list of menu titles
@@ -14,6 +13,7 @@ class Menu extends Component {
             innerJSX: [],
             activeIndex: 0
         }
+        this.components = ["/dash", "/dash/settings"];
     }
 
     componentDidMount(){
@@ -31,7 +31,8 @@ class Menu extends Component {
         this.makeItems(ind);
         this.setState({activeIndex: ind});
         //forward again up to parent.
-        this.props.setMain(ind);
+        //this.props.setMain(ind);
+        this.props.history.push(this.components[ind]);
     }
 
     async logout() {
@@ -51,4 +52,4 @@ class Menu extends Component {
     }
 }
 
-export default withAuth(Menu);
+export default withRouter(withAuth(Menu));
