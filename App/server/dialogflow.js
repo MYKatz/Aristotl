@@ -34,20 +34,20 @@ class DialogFlow {
 		}
 		try {
 			let responses = await this.sessionClient.detectIntent(request)			
-            console.log('DialogFlow.sendTextMessageToDialogFlow: Detected intent');
-            console.log(responses[0].queryResult.fulfillmentText);
+            //console.log('DialogFlow.sendTextMessageToDialogFlow: Detected intent');
+            //console.log(responses[0].queryResult.fulfillmentText);
 			return responses
 		}
 		catch(err) {
-			console.error('DialogFlow.sendTextMessageToDialogFlow ERROR:', err);
+			//console.error('DialogFlow.sendTextMessageToDialogFlow ERROR:', err);
 			throw err
 		}
 	}
 }
 
+module.exports = DialogFlow
+/*
 var df = new DialogFlow("newagent-e0a57");
-
-
 
 
 function sleep(ms) {
@@ -61,4 +61,4 @@ async function demo() {
     console.log(l[0].queryResult.outputContexts[0].parameters.fields.problem_subject);
   }
   
-demo();
+demo(); */
