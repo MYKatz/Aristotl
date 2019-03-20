@@ -56,6 +56,7 @@ async function replyWithDialogFlow(socket, msg){
         newProblem.isActive = true;
         newProblem.subject = responses[0].queryResult.outputContexts[0].parameters.fields.problem_subject.stringValue.toLowerCase();
         newProblem.gradeLevel = currentSockets[socket.id].gradeLevel;
+        newProblem.userbio = currentSockets[socket.id].bio;
 
         newProblem.save(function(err, p){
             if(err){throw err}
@@ -84,7 +85,8 @@ io.on("connection", function(socket){
         currentSockets[socket.id] = {
             VADER: 0., //compound vader score, implement later
             gradeLevel: info.gradeLevel,
-            uid: info.sub
+            uid: info.sub,
+            bio: info.bio
         }
         console.log(currentSockets);
     });

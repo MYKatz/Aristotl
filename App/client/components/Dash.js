@@ -57,7 +57,7 @@ class Dash extends Component {
                             {/* <button className="button is-medium is-fullwidth blackbutton">Logout</button> */}
                         </div>
                     </div>
-                    <div className="column" style={{paddingTop: 0, paddingBottom: 0, background: "white"}}>
+                    <div className="column" style={{overflowY: 'scroll', paddingTop: 0, paddingBottom: 0, background: "white"}}>
                         {/* {this.components[this.state.activeComponent]} */}
                         <Switch>
                             <Route path="/dash/settings" exact component={Settings} />

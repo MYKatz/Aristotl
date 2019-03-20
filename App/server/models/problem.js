@@ -6,7 +6,8 @@ var problemSchema = mongoose.Schema({
     isJoined: Boolean, //is joined by tutor
     isActive: Boolean,
     subject: String,
-    gradeLevel: Number
+    gradeLevel: Number,
+    userbio: String
 });
 
 module.exports = mongoose.model("Problem", problemSchema);
