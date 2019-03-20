@@ -6,6 +6,7 @@ import { Security, ImplicitCallback, SecureRoute } from '@okta/okta-react';
 
 import Login from "./Login";
 import Dash from "./Dash";
+import PrivateRoom from './PrivateRoom';
 
 const config = {
   issuer: 'https://dev-994297.okta.com/oauth2/default',
@@ -29,6 +30,7 @@ class App extends Component {
           <Route path="/" exact component={Login} />
           <Route path='/implicit/callback' component={ImplicitCallback}/>
           <SecureRoute path="/dash" component={Dash}/>
+          <SecureRoute path="/private" component={PrivateRoom}/>
         </Security>
       </Router>
     );

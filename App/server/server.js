@@ -105,6 +105,12 @@ io.on("connection", function(socket){
     });
 });
 
+var priv = io.of('/private')
+
+priv.on('connection', function(socket){
+    console.log("socket CONNECTED to PRIVATE");
+});
+
 io.listen(8001); //listen on port 8001
 
 

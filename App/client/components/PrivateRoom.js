@@ -20,7 +20,7 @@ class PrivateRoom extends Component{
         this._handleUp = this._handleUp.bind(this);
         this.getToken = this.getToken.bind(this);
         this.whiteboardRef = React.createRef();
-        this.socket = openSocket('http://localhost:8001');
+        this.socket = openSocket('http://localhost:8001/private');
         this.state = {
             messages : [],
             messagejsx : [],
