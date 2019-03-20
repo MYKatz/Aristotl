@@ -6,7 +6,7 @@ import openSocket from 'socket.io-client';
 
 import MessageBubble from "./elements/MessageBubble";
 
-class ChatBoard extends Component{
+class PrivateRoom extends Component{
     constructor(props){
         super(props);
         this.updateMessages = this.updateMessages.bind(this);
@@ -35,7 +35,6 @@ class ChatBoard extends Component{
         var msglist = [...this.state.messages, msg].map((message) =>
             <MessageBubble text={message} type="othermsg" />
         )
-        console.log(msglist);
         this.setState({messagejsx: msglist}, this.messagesScrollToBottom());
         this.setState({messages: [...this.state.messages, msg]});
     }
@@ -150,4 +149,4 @@ class ChatBoard extends Component{
 
 }
 
-export default withAuth(ChatBoard);
+export default withAuth(PrivateRoom);
