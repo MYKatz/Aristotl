@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import '../css/dash.css';
 import { withAuth } from '@okta/okta-react';
 import { BrowserRouter as Router, Route, Redirect, Switch, withRouter} from "react-router-dom";
-import ChatBoard from "./ChatBoard";
+import Home from "./Home";
 import Settings from "./Settings";
 import Menu from "./elements/Menu";
 
@@ -62,7 +62,7 @@ class Dash extends Component {
                         <Switch>
                             <Route path="/dash/settings" exact component={Settings} />
                             <Route path="/two" render={() => <h3>Two</h3>} />
-                            <Route component={ChatBoard} />
+                            <Route component={Home} />
                         </Switch>
                     </div>
                 </div>

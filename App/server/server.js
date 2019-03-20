@@ -54,7 +54,7 @@ async function replyWithDialogFlow(socket, msg){
         newProblem.studentId = currentSockets[socket.id].uid;
         newProblem.isJoined = false;
         newProblem.isActive = true;
-        newProblem.subject = responses[0].queryResult.outputContexts[0].parameters.fields.problem_subject.stringValue;
+        newProblem.subject = responses[0].queryResult.outputContexts[0].parameters.fields.problem_subject.stringValue.toLowerCase();
         newProblem.gradeLevel = currentSockets[socket.id].gradeLevel;
 
         newProblem.save(function(err, p){

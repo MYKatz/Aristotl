@@ -4,6 +4,8 @@ const okta = require('@okta/okta-sdk-nodejs');
 var router = express.Router();
 var path = require('path');
 
+var Problem = require('../models/problem.js');
+
 // middleware to validate jwt
 const oktaJwtVerifier = new OktaJwtVerifier({
   issuer: 'https://dev-994297.okta.com/oauth2/default',
@@ -46,9 +48,7 @@ router.get('/favicon', function(req, res){
   res.sendFile(path.join(__dirname, '../../client/favicon.png'))
 });
 
-router.get('/*', function(req, res){
-  res.render('index')
-});
+
 
 router.post('/api', authenticationRequired, function(req, res){
   oktaClient.getUser(req.jwt.claims.uid)
@@ -63,6 +63,20 @@ router.post('/api', authenticationRequired, function(req, res){
     user.update()
     .then(() => res.send({good: "yes"}))
   });
+});
+
+router.get('/api/getProblems', authenticationRequired, function(req, res){
+  oktaClient.getUser(req.jwt.claims.uid)
+  .then(user => {
+    Problem.find({subject: {$in: user.profile.subjects}, isJoined: false, isActive: true}, function(err, docs){
+      res.send({problems: docs});
+    });
+    //console.log(user.profile.subjects);
+  });
+});
+
+router.get('/*', function(req, res){
+  res.render('index')
 });
 
 module.exports = router;

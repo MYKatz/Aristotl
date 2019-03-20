@@ -68,7 +68,9 @@ class Settings extends Component{
     async checkGroup(){
         const user = await this.props.auth.getUser();
         console.log(user);
-        this.formatSubjects(user.subjects);
+        if(user.subjects){
+            this.formatSubjects(user.subjects);
+        }
         this.setState({userData: user});
         if(!user.isTutor){
             //render Student settings page
