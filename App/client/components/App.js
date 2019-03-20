@@ -30,7 +30,7 @@ class App extends Component {
           <Route path="/" exact component={Login} />
           <Route path='/implicit/callback' component={ImplicitCallback}/>
           <SecureRoute path="/dash" component={Dash}/>
-          <SecureRoute path="/private" component={PrivateRoom}/>
+          <SecureRoute path="/private/:id" component={PrivateRoom}/>
         </Security>
       </Router>
     );

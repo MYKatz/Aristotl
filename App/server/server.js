@@ -53,7 +53,7 @@ async function replyWithDialogFlow(socket, msg){
         var newProblem = new Problem();
         newProblem.studentId = currentSockets[socket.id].uid;
         newProblem.isJoined = false;
-        newProblem.isActive = true;
+        newProblem.isActive = false;
         newProblem.subject = responses[0].queryResult.outputContexts[0].parameters.fields.problem_subject.stringValue.toLowerCase();
         newProblem.gradeLevel = currentSockets[socket.id].gradeLevel;
         newProblem.userbio = currentSockets[socket.id].bio;
@@ -107,8 +107,62 @@ io.on("connection", function(socket){
 
 var priv = io.of('/private')
 
+privatesockets = {}
+
 priv.on('connection', function(socket){
-    console.log("socket CONNECTED to PRIVATE");
+
+    //custom variables per socket
+    var room = "";
+    var isStudent = null;
+
+    socket.on('makeDetails', function(info){
+        console.log(info)
+        //activate room when student joins
+        Problem.findById(info.room, function(err, p){
+            if(p){
+                if(!info.data.istutor){
+                    p.isActive = true;
+                    p.save(function(err, doc){
+                        if(err){throw err;}
+                        else{
+                            //success!
+                            socket.join(info.room);
+                            room = info.room;
+                            isStudent = true;
+                            console.log('success - student joined');
+                        }
+                    });
+                }
+
+                else{
+                    p.isJoined = true;
+                    p.save(function(err, doc){
+                        if(err){throw err;}
+                        else{
+                            socket.join(info.room);
+                            room = info.room;
+                            isStudent = false;
+                            console.log('success - tutor joined');
+                        }
+                    });
+                }
+            }
+            else{
+                console.log('invalid room');
+                //handle invalid room?
+            }
+        });
+    });
+
+    socket.on('chat', function(msg){
+        socket.to(room).emit('chat', msg);
+    });
+
+    socket.on("draw", function(drawing){
+        socket.to(room).emit('draw', drawing);
+    });
+
+    console.log("hi");
 });
 
 io.listen(8001); //listen on port 8001

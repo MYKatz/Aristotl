@@ -71,7 +71,7 @@ class PrivateRoom extends Component{
 
     async getToken(){
         var userdata = await this.props.auth.getUser();
-        this.socket.emit('makeDetails', userdata);
+        this.socket.emit('makeDetails', {data: userdata, room: this.props.match.params.id});
     }
 
     componentWillUnmount() {
