@@ -1,6 +1,19 @@
 import React, { Component } from 'react';
+import {withRouter} from 'react-router-dom';
 
 class ProblemCard extends Component {
+
+    constructor(props){
+        super(props);
+        this.goTo = this.goTo.bind(this);
+
+    }
+
+    goTo(){
+        this.props.history.push("/private/"+this.props.info._id);
+        window.location.reload(true);
+    }
+
     render(){
         return(
             <div className="tile is-4">
@@ -17,7 +30,7 @@ class ProblemCard extends Component {
                         </div>
                     </div>
                     <footer className="card-footer">
-                        <a href="#" className="card-footer-item">Join</a>
+                        <a onClick={this.goTo} className="card-footer-item">Join</a>
                     </footer>
                 </div>
             </div>
@@ -25,4 +38,4 @@ class ProblemCard extends Component {
     }
 }
 
-export default ProblemCard;
+export default withRouter(ProblemCard);

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import '../css/chatboard.css';
 import CanvasDraw from "react-canvas-draw";
 import { withAuth } from '@okta/okta-react';
+import { withRouter } from 'react-router-dom';
 import openSocket from 'socket.io-client';
 
 import MessageBubble from "./elements/MessageBubble";
@@ -19,6 +20,7 @@ class ChatBoard extends Component{
         this._handleClick = this._handleClick.bind(this);
         this._handleUp = this._handleUp.bind(this);
         this.getToken = this.getToken.bind(this);
+        this.goTo = this.goTo.bind(this);
         this.whiteboardRef = React.createRef();
         this.socket = openSocket('http://localhost:8001');
         this.state = {
@@ -67,7 +69,17 @@ class ChatBoard extends Component{
         //socket handling
         this.socket.on('chat', this.updateMessages);
         this.socket.on('draw', this.updateWhiteboard);
+        this.socket.on('redirect', this.goTo);
         this.getToken();
+    }
+
+    goTo(link){
+        setTimeout(function(){
+            this.props.history.push("/private/"+link);
+            window.location.reload(true);
+        }.bind(this),
+        3000
+        );
     }
 
     async getToken(){
@@ -150,4 +162,4 @@ class ChatBoard extends Component{
 
 }
 
-export default withAuth(ChatBoard);
+export default withRouter(withAuth(ChatBoard));

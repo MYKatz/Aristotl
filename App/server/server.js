@@ -63,7 +63,8 @@ async function replyWithDialogFlow(socket, msg){
             else{
                 console.log("hello");
                 currentSockets[socket.id].problem = p._id;
-                io.to(socket.id).emit("chat", "Someone is coming soon to help you with " + responses[0].queryResult.outputContexts[0].parameters.fields.problem_subject.stringValue);
+                io.to(socket.id).emit("chat", "You will be redirected to your private room shortly");
+                io.to(socket.id).emit("redirect", p._id);
             }
         });
         //just testing right now... this should move the socket into a new namespace and room... and create a new problem object lol
@@ -120,7 +121,7 @@ priv.on('connection', function(socket){
         //activate room when student joins
         Problem.findById(info.room, function(err, p){
             if(p){
-                if(!info.data.istutor){
+                if(!info.data.isTutor){
                     p.isActive = true;
                     p.save(function(err, doc){
                         if(err){throw err;}
@@ -154,12 +155,31 @@ priv.on('connection', function(socket){
         });
     });
 
-    socket.on('chat', function(msg){
+    socket.on("chat", function(msg){
         socket.to(room).emit('chat', msg);
     });
 
     socket.on("draw", function(drawing){
         socket.to(room).emit('draw', drawing);
+    });
+
+    socket.on("disconnect", function(){
+        Problem.findById(room, function(err, p){
+            if(p){
+                if(isStudent){
+                    p.isActive = false;
+                    p.save(function(err, doc){
+                        if(err){throw err}
+                    })
+                }
+                else{
+                    //tutor leaves, assume that student still wants it open :)
+                }
+            }
+            else{
+                //invalid room, nothing necessary
+            }
+        });
     });
 
     console.log("hi");
