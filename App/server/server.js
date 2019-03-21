@@ -25,10 +25,8 @@ var Problem = require('./models/problem.js');
 //dialogflow deets
 // Email address	dialogflow-fhiitq@newagent-e0a57.iam.gserviceaccount.com
 // Key ID   04573d62a9ad0cf52ac384f559dee4a5089ea55c
-//console.log(dialogflow);
 const df = new dialogflow("newagent-e0a57");
 df.sendTextMessageToDialogFlow("Hey I need help w/ econ", "rand");
-//console.log(l);
 
 var currentSockets = {};
 /* example socket object
@@ -61,7 +59,6 @@ async function replyWithDialogFlow(socket, msg){
         newProblem.save(function(err, p){
             if(err){throw err}
             else{
-                console.log("hello");
                 currentSockets[socket.id].problem = p._id;
                 io.to(socket.id).emit("chat", "You will be redirected to your private room shortly");
                 io.to(socket.id).emit("redirect", p._id);
@@ -72,12 +69,10 @@ async function replyWithDialogFlow(socket, msg){
 }
 
 io.on("connection", function(socket){
-    console.log("User connected");
     socket.on("chat", function(msg){
         //socket.broadcast.emit("chat", msg);
         //io.to(socket.id).emit("HELLO");
         replyWithDialogFlow(socket, msg);
-        console.log(msg);
     })
     socket.on("draw", function(drawing){
         socket.broadcast.emit("draw", drawing);
@@ -89,12 +84,10 @@ io.on("connection", function(socket){
             uid: info.sub,
             bio: info.bio
         }
-        console.log(currentSockets);
     });
 
     socket.on("disconnect", function(){
         if(currentSockets[socket.id]){
-            console.log("Flagging user's problem as inactive");
             Problem.findByIdAndUpdate(currentSockets[socket.id].problem, {isActive: false}, function(err, model){
                 if(err){throw err}
                 else{delete currentSockets[socket.id];}
@@ -117,7 +110,6 @@ priv.on('connection', function(socket){
     var isStudent = null;
 
     socket.on('makeDetails', function(info){
-        console.log(info)
         //activate room when student joins
         Problem.findById(info.room, function(err, p){
             if(p){
@@ -130,7 +122,6 @@ priv.on('connection', function(socket){
                             socket.join(info.room);
                             room = info.room;
                             isStudent = true;
-                            console.log('success - student joined');
                         }
                     });
                 }
@@ -143,13 +134,11 @@ priv.on('connection', function(socket){
                             socket.join(info.room);
                             room = info.room;
                             isStudent = false;
-                            console.log('success - tutor joined');
                         }
                     });
                 }
             }
             else{
-                console.log('invalid room');
                 //handle invalid room?
             }
         });
@@ -174,6 +163,10 @@ priv.on('connection', function(socket){
                 }
                 else{
                     //tutor leaves, assume that student still wants it open :)
+                    p.isJoined = false;
+                    p.save(function(err, doc){
+                        if(err){throw err;}
+                    });
                 }
             }
             else{
@@ -182,7 +175,6 @@ priv.on('connection', function(socket){
         });
     });
 
-    console.log("hi");
 });
 
 io.listen(8001); //listen on port 8001
