@@ -6,6 +6,7 @@ var cors = require('cors');
 var bodyParser = require('body-parser');
 var dialogflow = require('./dialogflow.js');
 var mongoose = require("mongoose");
+var vader = require('vader-sentiment');
 var app = express();
 require('dotenv').config();
 app.set('view engine', 'ejs');
@@ -55,6 +56,15 @@ async function replyWithDialogFlow(socket, msg){
         newProblem.subject = responses[0].queryResult.outputContexts[0].parameters.fields.problem_subject.stringValue.toLowerCase();
         newProblem.gradeLevel = currentSockets[socket.id].gradeLevel;
         newProblem.userbio = currentSockets[socket.id].bio;
+        if(currentSockets[socket.id].VADER < -.05){
+            newProblem.studentSentiment = "negative";
+        }
+        else if(currentSockets[socket.id].VADER > .05){
+            newProblem.studentSentiment = "positive";
+        }
+        else{
+            newProblem.studentSentiment = "neutral";
+        }
 
         newProblem.save(function(err, p){
             if(err){throw err}
@@ -70,8 +80,16 @@ async function replyWithDialogFlow(socket, msg){
 
 io.on("connection", function(socket){
     socket.on("chat", function(msg){
-        //socket.broadcast.emit("chat", msg);
-        //io.to(socket.id).emit("HELLO");
+        var sentiment = vader.SentimentIntensityAnalyzer.polarity_scores(msg).compound; //vader sentiment compount score.. negative<-.05<neutral<.05<positive
+        if(currentSockets[socket.id].VADER == 0.){
+            //initialize vader score
+            currentSockets[socket.id].VADER = sentiment;
+        }
+        else{
+            //compute exponentially weighted moving average with beta = .8 (5 items)
+            currentSockets[socket.id].VADER = (0.8) * currentSockets[socket.id].VADER + (1 - 0.8) * sentiment
+        }
+        console.log(currentSockets[socket.id].VADER);
         replyWithDialogFlow(socket, msg);
     })
     socket.on("draw", function(drawing){

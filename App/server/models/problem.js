@@ -7,7 +7,8 @@ var problemSchema = mongoose.Schema({
     isActive: Boolean,
     subject: String,
     gradeLevel: Number,
-    userbio: String
+    userbio: String,
+    studentSentiment: String
 });
 
 module.exports = mongoose.model("Problem", problemSchema);
