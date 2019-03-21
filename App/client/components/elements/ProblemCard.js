@@ -26,7 +26,8 @@ class ProblemCard extends Component {
                     <div className="card-content">
                         <div className="content">
                             Gradelevel: {this.props.info.gradeLevel} <br/>
-                            Userbio: {this.props.info.userbio}
+                            Userbio: {this.props.info.userbio} <br/>
+                            Student Sentiment: <span className={this.props.info.studentSentiment}>{this.props.info.studentSentiment}</span>
                         </div>
                     </div>
                     <footer className="card-footer">

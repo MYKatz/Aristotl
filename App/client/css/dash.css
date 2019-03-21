@@ -76,3 +76,11 @@
 .chat-messages {
     margin-right: 5px;
 }
+
+.negative{
+    color: red;
+}
+
+.positive{
+    color: green;
+}
