@@ -3,8 +3,10 @@ import '../css/chatboard.css';
 import CanvasDraw from "react-canvas-draw";
 import { withAuth } from '@okta/okta-react';
 import openSocket from 'socket.io-client';
-
 import { ChatFeed, Message } from 'react-chat-ui';
+import { Picker } from 'emoji-mart';
+
+import 'emoji-mart/css/emoji-mart.css';
 
 class PrivateRoom extends Component{
     constructor(props){
@@ -20,6 +22,8 @@ class PrivateRoom extends Component{
         this._handleUp = this._handleUp.bind(this);
         this.getToken = this.getToken.bind(this);
         this.clickHandler = this.clickHandler.bind(this);
+        this.emojiHandler = this.emojiHandler.bind(this);
+        this.addEmoji = this.addEmoji.bind(this);
         this.whiteboardRef = React.createRef();
         this.socket = openSocket('http://localhost:8001/private');
         this.state = {
@@ -28,7 +32,8 @@ class PrivateRoom extends Component{
             inputvalue : '',
             whiteboardHeight: 400,
             whiteboardWidth: 400,
-            room: ""
+            room: "",
+            emojimartshown: false
         }
     }
 
@@ -119,6 +124,16 @@ class PrivateRoom extends Component{
         window.location.reload(true);
     }
 
+    emojiHandler(){
+        //toggles state
+        this.setState({emojimartshown: !this.state.emojimartshown});
+    }
+
+    addEmoji(e){
+        this.setState({inputvalue: this.state.inputvalue + e.native});
+        this.setState({emojimartshown: false});
+    }
+
     render() {
         return(
             <div className="fullpage" location={location}>
@@ -154,8 +169,12 @@ class PrivateRoom extends Component{
                                 messages={this.state.messages} 
                                 showSenderName
                             />
-                            <div className="inputbox">
+                            <div className="inputbox control has-icons-right">
                                 <input className="input is-rounded typemsg" type="text" value={this.state.inputvalue} onChange={this._handleChange} onKeyPress={this._handleKeyPress} placeholder="Type a message..."/>
+                                <span className="icon is-small is-right" style={{pointerEvents: "auto", cursor: "pointer", userSelect: "none"}} onClick={this.emojiHandler}>😃</span>
+                                {this.state.emojimartshown &&
+                                    <span style={{position: "absolute", right: 0, top: "-60vh"}}><Picker onSelect={this.addEmoji}/></span>
+                                }
                             </div>
                         </div>
                         <div className="column whiteboard" id="wb" onMouseUp={this._handleUp} onContextMenu={this._handleClick}>
