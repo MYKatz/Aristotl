@@ -61,7 +61,6 @@ class TutorBoard extends Component{
         return(
             <div>
                 <div style={{marginBottom: '3vh'}}>
-                    <span style={{fontSize: '2rem'}}>Home</span>
                 </div>
                 <div className="tile is-ancestor is-vertical">
                     {this.state.inner}

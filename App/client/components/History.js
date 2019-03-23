@@ -33,7 +33,6 @@ class History extends Component{
     render(){
         return(
             <div>
-                <h2 style={{fontSize: "2rem"}}>History</h2>
                 <div>
                 <nav className="panel">
                     {this.state.problems}

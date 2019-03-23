@@ -66,7 +66,6 @@ class Credits extends Component{
     render(){
         return(
             <div>
-                <h2 style={{fontSize: "2rem"}}>Add Credits</h2>
                     <div>
                             <div className="columns">
                                 <div className="column is-one-fifth"></div>

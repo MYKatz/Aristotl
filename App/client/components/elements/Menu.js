@@ -21,6 +21,7 @@ class Menu extends Component {
     }
 
     makeItems(targetIndex){
+        this.props.setMain(targetIndex);
         var itemlist = this.props.items.map((item, index) =>
             <MenuItem clickforwarder={this.clickForwarder} index={index} inner={item} active={(index === targetIndex ? true : false)} />
         )
@@ -31,7 +32,7 @@ class Menu extends Component {
         this.makeItems(ind);
         this.setState({activeIndex: ind});
         //forward again up to parent.
-        //this.props.setMain(ind);
+        this.props.setMain(ind);
         this.props.history.push(this.components[ind]);
     }
 

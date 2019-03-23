@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { withAuth } from '@okta/okta-react';
 import Select from 'react-select';
 
-
 const tags = [
     {value: "economics", label: "Economics"},
     {value: "math", label: "Math"},
@@ -109,7 +108,6 @@ class Settings extends Component{
     render(){
         return(
             <div>
-                <h2 style={{fontSize: "2rem"}}>Settings</h2>
                 {this.state.doneLoading &&
                     <div>
                         {this.state.isStudent ? (

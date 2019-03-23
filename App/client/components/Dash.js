@@ -2,6 +2,11 @@ import React, { Component } from 'react';
 import '../css/dash.css';
 import { withAuth } from '@okta/okta-react';
 import { BrowserRouter as Router, Route, Redirect, Switch, withRouter} from "react-router-dom";
+
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+
 import Home from "./Home";
 import Settings from "./Settings";
 import Credits from "./Credits";
@@ -13,8 +18,7 @@ class Dash extends Component {
         super(props);
         this.setMainComponent = this.setMainComponent.bind(this);
         this.checkAuth = this.checkAuth.bind(this);
-        //this.components = [<ChatBoard/>, <Settings/>, <div>example2</div>, <div>example3</div>, <div>example4</div>];
-        //this.components = ["/dash", "/dash/settings", "", "/dash/credits"];
+        this.titles = ["Home", "Settings", "History", "Credits"]
         this.state = {
             filler : null,
             activeComponent : 0,
@@ -65,15 +69,24 @@ class Dash extends Component {
                             {/* <button className="button is-medium is-fullwidth blackbutton">Logout</button> */}
                         </div>
                     </div>
-                    <div className="column" style={{overflowY: 'scroll', paddingTop: 0, paddingBottom: 0, background: "white"}}>
+                    <div className="column" style={{overflowY: 'scroll', paddingTop: 0, padding: 0, background: "white"}}>
+                        <AppBar position="static" color="default">
+                            <Toolbar>
+                                <Typography variant="h5" color="inherit">
+                                    {this.titles[this.state.activeComponent]}
+                                </Typography>
+                            </Toolbar>
+                        </AppBar>
                         {/* {this.components[this.state.activeComponent]} */}
-                        <Switch>
-                            <Route path="/dash/settings" exact component={Settings} />
-                            <Route path="/dash/history" exact component={History} />
-                            <Route path="/dash/credits" exact component={Credits} />
-                            <Route path="/two" render={() => <h3>Two</h3>} />
-                            <Route component={Home} />
-                        </Switch>
+                        <div style={{padding: ".75rem"}}>
+                            <Switch>
+                                <Route path="/dash/settings" exact component={Settings} />
+                                <Route path="/dash/history" exact component={History} />
+                                <Route path="/dash/credits" exact component={Credits} />
+                                <Route path="/two" render={() => <h3>Two</h3>} />
+                                <Route component={Home} />
+                            </Switch>
+                        </div>
                     </div>
                 </div>
             </div>
