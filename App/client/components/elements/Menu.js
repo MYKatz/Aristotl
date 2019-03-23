@@ -35,7 +35,7 @@ const styles = theme => ({
       flexGrow: 1,
       padding: theme.spacing.unit * 3,
     },
-    toolbar: theme.mixins.toolbar,
+    toolbar: theme.mixins.toolbar
 });
 
 class Menu extends Component {
@@ -99,6 +99,12 @@ class Menu extends Component {
             }}
             >
                 <div className={classes.toolbar} />
+                <div style={{marginTop: '2vh'}}>
+                    <Typography variant="subtitle1" color="inherit" align="center">
+                        Credits: {this.props.creds}
+                    </Typography>
+                </div>
+                <Divider />
                 <List>
                     {['Home', 'Settings', 'History', 'Credits'].map((text, index) => (
                         <MenuItem clickforwarder={this.clickForwarder} inner={text} index={index}/>

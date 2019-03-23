@@ -15,7 +15,7 @@ class MenuItem extends Component {
         this.state = {
             active : this.props.active || false
         };
-        this.icons = [<Home/>, <Settings/>, <DonutLarge/>, <ChatBubble/>]
+        this.icons = [<Home/>, <Settings/>, <ChatBubble/>, <DonutLarge/>]
     }
 
     clickHandler(){

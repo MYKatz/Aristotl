@@ -78,7 +78,7 @@ class Dash extends Component {
                             </Typography>
                         </Toolbar>
                     </AppBar>
-                    <Menu setMain={this.setMainComponent} items={["Home", "Settings", "History", "Credits", "Two"]}/>
+                    <Menu setMain={this.setMainComponent} creds={this.state.credits} items={["Home", "Settings", "History", "Credits", "Two"]}/>
                     {/* {this.components[this.state.activeComponent]} */}
                     <main className={classes.content} style={{paddingBottom: 0, height: "100vh"}}>
                         <div className={classes.toolbar} />
