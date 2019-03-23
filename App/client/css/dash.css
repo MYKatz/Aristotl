@@ -50,7 +50,7 @@
 }
 
 .chat-history {
-    height: 92vh;
+    height: 80vh;
 }
 
 .chat-history::-webkit-scrollbar-track
