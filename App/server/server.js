@@ -179,6 +179,7 @@ priv.on('connection', function(socket){
                                 return curr;
                             });
                             priv.to(socket.id).emit("messages", msges);
+                            priv.to(socket.id).emit("draw", doc.whiteboard || " ");
                         }
                     });
                 }
@@ -202,6 +203,12 @@ priv.on('connection', function(socket){
 
     socket.on("draw", function(drawing){
         socket.to(room).emit('draw', drawing);
+        Problem.findById(room, function(err, p){
+            if(p){
+                p.whiteboard = drawing;
+                p.save();
+            }
+        });
     });
 
     socket.on("disconnect", function(){
