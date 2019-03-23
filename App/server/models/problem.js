@@ -8,7 +8,8 @@ var problemSchema = mongoose.Schema({
     subject: String,
     gradeLevel: Number,
     userbio: String,
-    studentSentiment: String
+    studentSentiment: String,
+    messages: Array
 });
 
 module.exports = mongoose.model("Problem", problemSchema);

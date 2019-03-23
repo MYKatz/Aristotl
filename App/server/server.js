@@ -64,6 +64,7 @@ async function replyWithDialogFlow(socket, msg){
         newProblem.subject = responses[0].queryResult.outputContexts[0].parameters.fields.problem_subject.stringValue.toLowerCase();
         newProblem.gradeLevel = currentSockets[socket.id].gradeLevel;
         newProblem.userbio = currentSockets[socket.id].bio;
+        newProblem.messages = [];
         if(currentSockets[socket.id].VADER < -.05){
             newProblem.studentSentiment = "negative";
         }
@@ -160,6 +161,7 @@ priv.on('connection', function(socket){
                             socket.join(info.room);
                             room = info.room;
                             isStudent = true;
+                            priv.to(socket.id).emit("messages", doc.messages);
                         }
                     });
                 }
@@ -172,6 +174,11 @@ priv.on('connection', function(socket){
                             socket.join(info.room);
                             room = info.room;
                             isStudent = false;
+                            msges = doc.messages.map(function(curr){
+                                curr.id = (curr.id + 1) % 2;
+                                return curr;
+                            });
+                            priv.to(socket.id).emit("messages", msges);
                         }
                     });
                 }
@@ -184,6 +191,13 @@ priv.on('connection', function(socket){
 
     socket.on("chat", function(msg){
         socket.to(room).emit('chat', msg);
+        Problem.findById(room, function(err, p){
+            if(p){
+                var id = isStudent ? 0 : 1;
+                p.messages.push({id: id, message: msg});
+                p.save();
+            }
+        });
     });
 
     socket.on("draw", function(drawing){

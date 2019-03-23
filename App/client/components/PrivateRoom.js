@@ -24,6 +24,7 @@ class PrivateRoom extends Component{
         this.clickHandler = this.clickHandler.bind(this);
         this.emojiHandler = this.emojiHandler.bind(this);
         this.addEmoji = this.addEmoji.bind(this);
+        this.setMessages = this.setMessages.bind(this);
         this.whiteboardRef = React.createRef();
         this.socket = openSocket('http://localhost:8001/private');
         this.state = {
@@ -50,6 +51,10 @@ class PrivateRoom extends Component{
         this.whiteboardRef.loadSaveData(drawing, true);
     }
 
+    setMessages(arr){
+        this.setState({messages: arr});
+    }
+
     messagesScrollToBottom(){
     }
 
@@ -63,6 +68,7 @@ class PrivateRoom extends Component{
         //socket handling
         this.socket.on('chat', this.updateMessages);
         this.socket.on('draw', this.updateWhiteboard);
+        this.socket.on('messages', this.setMessages);
         this.getToken();
     }
 
