@@ -1,4 +1,12 @@
 import React, { Component } from 'react';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+
+import Home from '@material-ui/icons/Home';
+import Settings from '@material-ui/icons/Settings';
+import DonutLarge from '@material-ui/icons/DonutLarge';
+import ChatBubble from '@material-ui/icons/ChatBubble';
 
 class MenuItem extends Component {
     constructor(props){
@@ -7,6 +15,7 @@ class MenuItem extends Component {
         this.state = {
             active : this.props.active || false
         };
+        this.icons = [<Home/>, <Settings/>, <DonutLarge/>, <ChatBubble/>]
     }
 
     clickHandler(){
@@ -19,9 +28,18 @@ class MenuItem extends Component {
         }
     }
     
-    render(){
+    oldrender(){
         return(
             <li onClick={this.clickHandler}><a className={(this.state.active ? 'is-active' : '')}>{this.props.inner}</a></li>
+        )
+    }
+
+    render(){
+        return(
+            <ListItem button key={this.props.inner} onClick={this.clickHandler}>
+                <ListItemIcon>{this.icons[this.props.index]}</ListItemIcon>
+                <ListItemText primary={this.props.inner} />
+            </ListItem>
         )
     }
 }
