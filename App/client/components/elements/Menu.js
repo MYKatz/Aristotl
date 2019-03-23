@@ -13,7 +13,7 @@ class Menu extends Component {
             innerJSX: [],
             activeIndex: 0
         }
-        this.components = ["/dash", "/dash/settings", "", "/dash/credits"];
+        this.components = ["/dash", "/dash/settings", "/dash/history", "/dash/credits"];
     }
 
     componentDidMount(){

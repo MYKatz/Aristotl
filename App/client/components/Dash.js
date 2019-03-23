@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Route, Redirect, Switch, withRouter} from "rea
 import Home from "./Home";
 import Settings from "./Settings";
 import Credits from "./Credits";
+import History from "./History";
 import Menu from "./elements/Menu";
 
 class Dash extends Component {
@@ -13,7 +14,7 @@ class Dash extends Component {
         this.setMainComponent = this.setMainComponent.bind(this);
         this.checkAuth = this.checkAuth.bind(this);
         //this.components = [<ChatBoard/>, <Settings/>, <div>example2</div>, <div>example3</div>, <div>example4</div>];
-        this.components = ["/dash", "/dash/settings", "", "/dash/credits"];
+        //this.components = ["/dash", "/dash/settings", "", "/dash/credits"];
         this.state = {
             filler : null,
             activeComponent : 0,
@@ -24,7 +25,7 @@ class Dash extends Component {
 
     setMainComponent(ind){
         //this.setState({activeComponent: this.components[ind]});
-        this.props.history.push(this.components[ind]);
+        //this.props.history.push(this.components[ind]);
         //window.location.reload(true);
         this.setState({activeComponent: ind});
     }
@@ -68,6 +69,7 @@ class Dash extends Component {
                         {/* {this.components[this.state.activeComponent]} */}
                         <Switch>
                             <Route path="/dash/settings" exact component={Settings} />
+                            <Route path="/dash/history" exact component={History} />
                             <Route path="/dash/credits" exact component={Credits} />
                             <Route path="/two" render={() => <h3>Two</h3>} />
                             <Route component={Home} />

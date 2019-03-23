@@ -75,6 +75,15 @@ router.get('/api/getProblems', authenticationRequired, function(req, res){
   });
 });
 
+router.get('/api/getUserProblems', authenticationRequired, function(req, res){
+  oktaClient.getUser(req.jwt.claims.uid)
+  .then(user => {
+    Problem.find({studentId: req.jwt.claims.uid}, function(err, docs){
+      res.send({problems: docs});
+    })
+  });
+});
+
 router.post('/api/addcredits/:no', authenticationRequired, function(req, res){
   oktaClient.getUser(req.jwt.claims.uid)
   .then(user => {
