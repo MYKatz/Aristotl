@@ -7,6 +7,7 @@ import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
+import CssBaseline from '@material-ui/core/CssBaseline';
 
 import Home from "./Home";
 import Settings from "./Settings";
@@ -65,34 +66,31 @@ class Dash extends Component {
     }
 
     render(){
+        const { classes } = this.props;
         return(
             <Router>
-            <div className="fullpage" location={location}>
-                <div className="columns is-fullheight">
-                    <div className="">
-                        <Menu setMain={this.setMainComponent} items={["Home", "Settings", "History", "Credits", "Two"]}/>
-                    </div>
-                    <div className="column" style={{overflowY: 'scroll', paddingTop: 0, padding: 0, background: "white"}}>
-                        <AppBar position="static" color="default" style={{}}>
-                            <Toolbar>
-                                <Typography variant="h5" color="inherit">
-                                    {this.titles[this.state.activeComponent]}
-                                </Typography>
-                            </Toolbar>
-                        </AppBar>
-                        {/* {this.components[this.state.activeComponent]} */}
-                        <div style={{padding: ".75rem"}}>
-                            <Switch>
-                                <Route path="/dash/settings" exact component={Settings} />
-                                <Route path="/dash/history" exact component={History} />
-                                <Route path="/dash/credits" exact component={Credits} />
-                                <Route path="/two" render={() => <h3>Two</h3>} />
-                                <Route component={Home} />
-                            </Switch>
-                        </div>
-                    </div>
+                <div className={classes.root} location={location}>
+                    <CssBaseline />
+                    <AppBar position="fixed" color="default" className={classes.appBar}>
+                        <Toolbar>
+                            <Typography variant="h6" color="inherit">
+                                {this.titles[this.state.activeComponent]}
+                            </Typography>
+                        </Toolbar>
+                    </AppBar>
+                    <Menu setMain={this.setMainComponent} items={["Home", "Settings", "History", "Credits", "Two"]}/>
+                    {/* {this.components[this.state.activeComponent]} */}
+                    <main className={classes.content} style={{paddingBottom: 0, height: "100vh"}}>
+                        <div className={classes.toolbar} />
+                        <Switch>
+                            <Route path="/dash/settings" exact component={Settings} />
+                            <Route path="/dash/history" exact component={History} />
+                            <Route path="/dash/credits" exact component={Credits} />
+                            <Route path="/two" render={() => <h3>Two</h3>} />
+                            <Route component={Home} />
+                        </Switch>
+                    </main>
                 </div>
-            </div>
             </Router>
         )
     }

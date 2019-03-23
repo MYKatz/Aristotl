@@ -92,8 +92,8 @@ class ChatBoard extends Component{
 
     render() {
         return(
-            <div className="columns is-fullheight">
-                <div className="column chatinterface">
+            <div className="columns is-fullheight" style={{height: "89vh"}}>
+                <div className="column chatinterface" style={{background: "#fafafa"}}>
                     <ChatFeed 
                             messages={this.state.messages} 
                             showSenderName
