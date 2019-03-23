@@ -75,6 +75,18 @@ router.get('/api/getProblems', authenticationRequired, function(req, res){
   });
 });
 
+router.post('/api/addcredits/:no', authenticationRequired, function(req, res){
+  oktaClient.getUser(req.jwt.claims.uid)
+  .then(user => {
+    user.profile.credits = user.profile.credits || 0;
+    user.profile.credits += parseInt(req.params.no);
+    console.log(user);
+    console.log(req.params.no);
+    user.update()
+    .then(() => res.send({good: "yes"}));
+  });
+});
+
 router.get('/*', function(req, res){
   res.render('index')
 });

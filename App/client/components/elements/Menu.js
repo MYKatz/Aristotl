@@ -9,16 +9,15 @@ class Menu extends Component {
         this.makeItems = this.makeItems.bind(this);
         this.clickForwarder = this.clickForwarder.bind(this);
         this.logout = this.logout.bind(this);
-        this.locations = this.components = ["/dash", "/dash/settings"];
         this.state = {
             innerJSX: [],
             activeIndex: 0
         }
-        this.components = ["/dash", "/dash/settings"];
+        this.components = ["/dash", "/dash/settings", "", "/dash/credits"];
     }
 
     componentDidMount(){
-        this.makeItems(this.locations.indexOf(this.props.location.pathname));
+        this.makeItems(this.components.indexOf(this.props.location.pathname));
     }
 
     makeItems(targetIndex){

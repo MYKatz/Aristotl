@@ -5,6 +5,7 @@ var path = require('path');
 var cors = require('cors');
 var bodyParser = require('body-parser');
 var dialogflow = require('./dialogflow.js');
+var okta = require('@okta/okta-sdk-nodejs');
 var mongoose = require("mongoose");
 var vader = require('vader-sentiment');
 var app = express();
@@ -17,6 +18,13 @@ app.use(express.static(path.join(__dirname, '../client')));
 app.use('/', router);
 app.use(cors());
 
+
+// Okta stuff
+const oktaClient = new okta.Client({
+    orgUrl: "https://dev-994297.okta.com/",
+    token: "00jjwA-cffmIKzA_M50v-0Ke-R2hHNmMKJhXEoJyN3",
+    requestExecutor: new okta.DefaultRequestExecutor()
+});
 
 //Mongoose stuff
 mongoose.promise = global.Promise;
@@ -70,8 +78,20 @@ async function replyWithDialogFlow(socket, msg){
             if(err){throw err}
             else{
                 currentSockets[socket.id].problem = p._id;
-                io.to(socket.id).emit("chat", "You will be redirected to your private room shortly");
-                io.to(socket.id).emit("redirect", p._id);
+                oktaClient.getUser(currentSockets[socket.id].uid)
+                .then(user => {
+                    if(user.profile.credits > 0){
+                        user.profile.credits -= 1;
+                        user.update()
+                        .then(() => {
+                            io.to(socket.id).emit("chat", "A credit has been deducted from your account. You will be redirected to your private room shortly");
+                            io.to(socket.id).emit("redirect", p._id);
+                        });
+                    }
+                    else{
+                        io.to(socket.id).emit("chat", "Wait! You don't have enough credits!");
+                    }
+                })
             }
         });
         //just testing right now... this should move the socket into a new namespace and room... and create a new problem object lol

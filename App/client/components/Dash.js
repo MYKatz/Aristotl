@@ -4,6 +4,7 @@ import { withAuth } from '@okta/okta-react';
 import { BrowserRouter as Router, Route, Redirect, Switch, withRouter} from "react-router-dom";
 import Home from "./Home";
 import Settings from "./Settings";
+import Credits from "./Credits";
 import Menu from "./elements/Menu";
 
 class Dash extends Component {
@@ -12,7 +13,7 @@ class Dash extends Component {
         this.setMainComponent = this.setMainComponent.bind(this);
         this.checkAuth = this.checkAuth.bind(this);
         //this.components = [<ChatBoard/>, <Settings/>, <div>example2</div>, <div>example3</div>, <div>example4</div>];
-        this.components = ["/dash", "/dash/settings"];
+        this.components = ["/dash", "/dash/settings", "", "/dash/credits"];
         this.state = {
             filler : null,
             activeComponent : 0,
@@ -31,6 +32,7 @@ class Dash extends Component {
     async checkAuth(){
         const user = await this.props.auth.getUser();
         this.setState({name: user.name});
+        this.setState({credits: user.credits});
     }
 
     render(){
@@ -52,7 +54,12 @@ class Dash extends Component {
                                 <strong>{this.state.name}</strong>
                             </div>
                         </div>
-                        <Menu setMain={this.setMainComponent} items={["Home", "Settings", "History", "One", "Two"]}/>
+                        <div className="level">
+                            <div className="level-item">
+                                Credits: {this.state.credits || 0}
+                            </div>
+                        </div>
+                        <Menu setMain={this.setMainComponent} items={["Home", "Settings", "History", "Credits", "Two"]}/>
                         <div className="bottomcontainer">
                             {/* <button className="button is-medium is-fullwidth blackbutton">Logout</button> */}
                         </div>
@@ -61,6 +68,7 @@ class Dash extends Component {
                         {/* {this.components[this.state.activeComponent]} */}
                         <Switch>
                             <Route path="/dash/settings" exact component={Settings} />
+                            <Route path="/dash/credits" exact component={Credits} />
                             <Route path="/two" render={() => <h3>Two</h3>} />
                             <Route component={Home} />
                         </Switch>
