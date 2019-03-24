@@ -209,7 +209,7 @@ class PrivateRoom extends Component{
                             </ListItem>
                         </List>
                     </Drawer>
-                    <main className={classes.content} style={{paddingBottom: 0, height: "100vh"}}>
+                    <main className={classes.content} style={{paddingBottom: 0, paddingTop: 0, height: "100vh"}}>
                         <div className={classes.toolbar} />
                         <div className="columns is-fullheight" style={{height: "89vh"}}>
                             <div className="column chatinterface" style={{background: "#fafafa"}}>

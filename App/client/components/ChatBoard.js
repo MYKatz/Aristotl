@@ -6,6 +6,14 @@ import { withRouter } from 'react-router-dom';
 import openSocket from 'socket.io-client';
 import { ChatFeed, Message } from 'react-chat-ui';
 
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+
 class ChatBoard extends Component{
     constructor(props){
         super(props);
@@ -23,7 +31,8 @@ class ChatBoard extends Component{
             inputvalue : '',
             whiteboardHeight: 400,
             whiteboardWidth: 400,
-            room: ""
+            room: "",
+            modalOpen: true
         }
     }
 
@@ -90,6 +99,10 @@ class ChatBoard extends Component{
         this.setState({inputvalue: c.target.value});
     }
 
+    _handleClose(){
+        this.setState({modalOpen: false});
+    }
+
     render() {
         return(
             <div className="columns is-fullheight" style={{height: "89vh"}}>
@@ -102,6 +115,31 @@ class ChatBoard extends Component{
                         <input className="input is-rounded typemsg" type="text" value={this.state.inputvalue} onChange={this._handleChange} onKeyPress={this._handleKeyPress} placeholder="Type a message..."/>
                     </div>
                 </div>
+                <Dialog
+                open={this.state.modalOpen}
+                onClose={this.handleClose}
+                aria-labelledby="form-dialog-title"
+                >
+                    <DialogTitle id="form-dialog-title">Image Upload</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                        Please upload an image of your problem.
+                        </DialogContentText>
+                        <TextField
+                        autoFocus
+                        margin="dense"
+                        id="name"
+                        label="Email Address"
+                        type="email"
+                        fullWidth
+                        />
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={this.handleClose} color="primary">
+                        I don't have one
+                        </Button>
+                    </DialogActions>
+                </Dialog>
             </div>
         )
     }

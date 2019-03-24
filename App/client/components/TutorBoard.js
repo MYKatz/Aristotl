@@ -55,6 +55,9 @@ class TutorBoard extends Component{
             </div>
         )
         this.setState({inner: innerjsx});
+        if(probs.length < 1){
+            this.setState({inner: "No active student problems that match your expertise..."});
+        }
     }
 
     render(){

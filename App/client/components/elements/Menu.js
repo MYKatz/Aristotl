@@ -47,13 +47,14 @@ class Menu extends Component {
         this.logout = this.logout.bind(this);
         this.state = {
             innerJSX: [],
-            activeIndex: 0
+            activeIndex: 0,
+            components: ["/dash", "/dash/settings", "/dash/history", "/dash/credits"],
+            items: ['Home', 'Settings', 'History', 'Credits']
         }
-        this.components = ["/dash", "/dash/settings", "/dash/history", "/dash/credits"];
     }
 
     componentDidMount(){
-        this.makeItems(this.components.indexOf(this.props.location.pathname));
+        this.makeItems(this.state.components.indexOf(this.props.location.pathname));
     }
 
     makeItems(targetIndex){
@@ -69,7 +70,7 @@ class Menu extends Component {
         this.setState({activeIndex: ind});
         //forward again up to parent.
         this.props.setMain(ind);
-        this.props.history.push(this.components[ind]);
+        this.props.history.push(this.state.components[ind]);
     }
 
     async logout() {
@@ -106,7 +107,7 @@ class Menu extends Component {
                 </div>
                 <Divider />
                 <List>
-                    {['Home', 'Settings', 'History', 'Credits'].map((text, index) => (
+                    {this.state.items.map((text, index) => (
                         <MenuItem clickforwarder={this.clickForwarder} inner={text} index={index}/>
                     ))}
                 </List>

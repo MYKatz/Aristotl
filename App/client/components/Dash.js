@@ -71,6 +71,7 @@ class Dash extends Component {
         const user = await this.props.auth.getUser();
         this.setState({name: user.name});
         this.setState({credits: user.credits});
+        this.setState({deets: user});
     }
 
     render(){
@@ -101,7 +102,7 @@ class Dash extends Component {
                     </main>
                 </div>
             </Router>
-            </MuiThemeProvider>
+            </MuiThemeProvider> 
         )
     }
 
