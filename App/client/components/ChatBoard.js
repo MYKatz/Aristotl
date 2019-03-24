@@ -7,12 +7,13 @@ import openSocket from 'socket.io-client';
 import { ChatFeed, Message } from 'react-chat-ui';
 
 import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+
+import Dropzone from "react-dropzone";
 
 class ChatBoard extends Component{
     constructor(props){
@@ -24,6 +25,7 @@ class ChatBoard extends Component{
         this._handleUp = this._handleUp.bind(this);
         this.getToken = this.getToken.bind(this);
         this.goTo = this.goTo.bind(this);
+        this._handleClose = this._handleClose.bind(this);
         this.socket = openSocket('http://localhost:8001');
         this.state = {
             messages : [],
@@ -32,7 +34,8 @@ class ChatBoard extends Component{
             whiteboardHeight: 400,
             whiteboardWidth: 400,
             room: "",
-            modalOpen: true
+            modalOpen: false,
+            link: ""
         }
     }
 
@@ -55,12 +58,8 @@ class ChatBoard extends Component{
     }
 
     goTo(link){
-        setTimeout(function(){
-            this.props.history.push("/private/"+link);
-            window.location.reload(true);
-        }.bind(this),
-        3000
-        );
+        this.setState({modalOpen: true});
+        this.setState({link: link});
     }
 
     async getToken(){
@@ -100,7 +99,8 @@ class ChatBoard extends Component{
     }
 
     _handleClose(){
-        this.setState({modalOpen: false});
+        this.props.history.push("/private/"+this.state.link);
+        window.location.reload(true);
     }
 
     render() {
@@ -122,20 +122,21 @@ class ChatBoard extends Component{
                 >
                     <DialogTitle id="form-dialog-title">Image Upload</DialogTitle>
                     <DialogContent>
-                        <DialogContentText>
-                        Please upload an image of your problem.
-                        </DialogContentText>
-                        <TextField
-                        autoFocus
-                        margin="dense"
-                        id="name"
-                        label="Email Address"
-                        type="email"
-                        fullWidth
-                        />
+                        <Dropzone onDrop={acceptedFiles => console.log(acceptedFiles)}>
+                            {({getRootProps, getInputProps}) => (
+                                <section>
+                                <div {...getRootProps()} style={{height: "20vh", borderStyle: "dotted"}}>
+                                    <input {...getInputProps()} />
+                                    <DialogContentText style={{marginTop: "8vh"}}>
+                                        Please drop in an image of your problem.
+                                    </DialogContentText>
+                                </div>
+                                </section>
+                            )}
+                        </Dropzone>
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={this.handleClose} color="primary">
+                        <Button onClick={this._handleClose} color="primary">
                         I don't have one
                         </Button>
                     </DialogActions>
