@@ -162,6 +162,7 @@ priv.on('connection', function(socket){
                             room = info.room;
                             isStudent = true;
                             priv.to(socket.id).emit("messages", doc.messages);
+                            priv.to(socket.id).emit("draw", doc.whiteboard || " ");
                         }
                     });
                 }

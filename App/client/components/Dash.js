@@ -8,6 +8,14 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import CssBaseline from '@material-ui/core/CssBaseline';
+import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
+import blue from '@material-ui/core/colors/blue';
+
+const theme = createMuiTheme({
+  palette: {
+    primary: blue,
+  },
+});
 
 import Home from "./Home";
 import Settings from "./Settings";
@@ -68,10 +76,11 @@ class Dash extends Component {
     render(){
         const { classes } = this.props;
         return(
+            <MuiThemeProvider theme={theme}>
             <Router>
                 <div className={classes.root} location={location}>
                     <CssBaseline />
-                    <AppBar position="fixed" color="default" className={classes.appBar}>
+                    <AppBar position="fixed" color="primary" className={classes.appBar}>
                         <Toolbar>
                             <Typography variant="h6" color="inherit">
                                 {this.titles[this.state.activeComponent]}
@@ -92,6 +101,7 @@ class Dash extends Component {
                     </main>
                 </div>
             </Router>
+            </MuiThemeProvider>
         )
     }
 
