@@ -78,7 +78,7 @@ router.post('/api', authenticationRequired, function(req, res){
 router.get('/api/getProblems', authenticationRequired, function(req, res){
   oktaClient.getUser(req.jwt.claims.uid)
   .then(user => {
-    Problem.find({subject: {$in: user.profile.subjects}, isJoined: false, isActive: true}, function(err, docs){
+    Problem.find({subject: {$in: user.profile.subjects}, isJoined: false, isOpen: true}, function(err, docs){
       res.send({problems: docs});
     });
     //console.log(user.profile.subjects);

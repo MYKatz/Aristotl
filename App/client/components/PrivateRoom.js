@@ -22,14 +22,17 @@ import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import ExitToApp from '@material-ui/icons/ExitToApp';
-import Info from '@material-ui/icons/Info';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+
+import ExitToApp from '@material-ui/icons/ExitToApp';
+import Info from '@material-ui/icons/Info';
+import Close from '@material-ui/icons/Close';
+
 
 const theme = createMuiTheme({
   palette: {
@@ -79,6 +82,7 @@ class PrivateRoom extends Component{
         this.setMessages = this.setMessages.bind(this);
         this.openModal = this.openModal.bind(this);
         this._handleClose = this._handleClose.bind(this);
+        this.closeHandler = this.closeHandler.bind(this);
         this.whiteboardRef = React.createRef();
         this.socket = openSocket('http://localhost:8001/private');
         this.state = {
@@ -90,7 +94,8 @@ class PrivateRoom extends Component{
             room: "",
             emojimartshown: false,
             modalVisible: false,
-            modalImg: "data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="
+            modalImg: "data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==",
+            isStudent: false
         }
     }
 
@@ -131,6 +136,7 @@ class PrivateRoom extends Component{
     async getToken(){
         var userdata = await this.props.auth.getUser();
         this.setState({name: userdata.name});
+        this.setState({isStudent: !userdata.isTutor})
         this.socket.emit('makeDetails', {data: userdata, room: this.props.match.params.id});
         const response = await fetch("http://localhost:8000/api/getphoto/" + this.props.match.params.id, {
             headers: {
@@ -193,6 +199,12 @@ class PrivateRoom extends Component{
         window.location.reload(true);
     }
 
+    closeHandler(){
+        this.socket.emit("close", "");
+        this.props.history.push("/dash");
+        window.location.reload(true);
+    }
+
     emojiHandler(){
         //toggles state
         this.setState({emojimartshown: !this.state.emojimartshown});
@@ -241,6 +253,12 @@ class PrivateRoom extends Component{
                                 <ListItemIcon><ExitToApp /></ListItemIcon>
                                 <ListItemText primary={"Leave Room"} />
                             </ListItem>
+                            {this.state.isStudent &&
+                                <ListItem button key={"Close Problem"} onClick={this.closeHandler}>
+                                    <ListItemIcon><Close /></ListItemIcon>
+                                    <ListItemText primary={"Close Problem"} />
+                                </ListItem>
+                            }
                         </List>
                     </Drawer>
                     <main className={classes.content} style={{paddingBottom: 0, paddingTop: 0, height: "100vh"}}>

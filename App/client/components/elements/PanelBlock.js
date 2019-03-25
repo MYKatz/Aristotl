@@ -18,7 +18,7 @@ class PanelBlock extends Component{
                 <span className="panel-icon">
                     <i class="fas fa-comments" aria-hidden="true"></i>
                 </span>
-                {this.props.info.subject.charAt(0).toUpperCase() + this.props.info.subject.slice(1)} | {this.props.info.messages.length} messages
+                {this.props.info.subject.charAt(0).toUpperCase() + this.props.info.subject.slice(1)} | {this.props.info.messages.length} messages {this.props.info.isOpen &&  "|" + <span style={{color: "green"}}>  Open</span>}
             </a>
         )
     }
