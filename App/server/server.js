@@ -18,6 +18,11 @@ app.use(express.static(path.join(__dirname, '../client')));
 app.use('/', router);
 app.use(cors());
 
+//Mongoose stuff
+mongoose.promise = global.Promise;
+mongoose.connect(process.env.MONGO_URI);
+var Problem = require('./models/problem.js');
+
 
 // Okta stuff
 const oktaClient = new okta.Client({
@@ -26,10 +31,6 @@ const oktaClient = new okta.Client({
     requestExecutor: new okta.DefaultRequestExecutor()
 });
 
-//Mongoose stuff
-mongoose.promise = global.Promise;
-mongoose.connect(process.env.MONGO_URI);
-var Problem = require('./models/problem.js');
 
 //dialogflow deets
 // Email address	dialogflow-fhiitq@newagent-e0a57.iam.gserviceaccount.com
