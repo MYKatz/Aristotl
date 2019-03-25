@@ -23,6 +23,13 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import ExitToApp from '@material-ui/icons/ExitToApp';
+import Info from '@material-ui/icons/Info';
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
 const theme = createMuiTheme({
   palette: {
@@ -70,6 +77,8 @@ class PrivateRoom extends Component{
         this.emojiHandler = this.emojiHandler.bind(this);
         this.addEmoji = this.addEmoji.bind(this);
         this.setMessages = this.setMessages.bind(this);
+        this.openModal = this.openModal.bind(this);
+        this._handleClose = this._handleClose.bind(this);
         this.whiteboardRef = React.createRef();
         this.socket = openSocket('http://localhost:8001/private');
         this.state = {
@@ -79,7 +88,8 @@ class PrivateRoom extends Component{
             whiteboardHeight: 400,
             whiteboardWidth: 400,
             room: "",
-            emojimartshown: false
+            emojimartshown: false,
+            modalVisible: false
         }
     }
 
@@ -181,6 +191,14 @@ class PrivateRoom extends Component{
         this.setState({emojimartshown: false});
     }
 
+    openModal(){
+        this.setState({modalVisible: true});
+    }
+
+    _handleClose(){
+        this.setState({modalVisible: false});
+    }
+
     render() {
         const { classes } = this.props;
         return(
@@ -203,6 +221,10 @@ class PrivateRoom extends Component{
                     >
                         <div className={classes.toolbar} />
                         <List>
+                            <ListItem button key={"Room info"} onClick={this.openModal}>
+                                <ListItemIcon><Info /></ListItemIcon>
+                                <ListItemText primary={"Room info"} />
+                            </ListItem>
                             <ListItem button key={"Leave Room"} onClick={this.clickHandler}>
                                 <ListItemIcon><ExitToApp /></ListItemIcon>
                                 <ListItemText primary={"Leave Room"} />
@@ -232,6 +254,23 @@ class PrivateRoom extends Component{
                         </div>
                     </main>
                 </div>
+                <Dialog
+                open={this.state.modalVisible}
+                onClose={this.handleClose}
+                aria-labelledby="form-dialog-title"
+                >
+                    <DialogTitle id="form-dialog-title">Room Info</DialogTitle>
+                    <DialogContent>
+                    <DialogContentText>
+                        Room ID: {this.props.match.params.id}
+                    </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={this._handleClose} color="primary">
+                        Close
+                        </Button>
+                    </DialogActions>
+                </Dialog>
         </MuiThemeProvider>
 
 
