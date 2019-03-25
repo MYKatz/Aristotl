@@ -10,7 +10,8 @@ var problemSchema = mongoose.Schema({
     userbio: String,
     studentSentiment: String,
     messages: Array,
-    whiteboard: String
+    whiteboard: String,
+    GRIDid: String
 });
 
 module.exports = mongoose.model("Problem", problemSchema);

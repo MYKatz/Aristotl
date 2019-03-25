@@ -26,6 +26,7 @@ class ChatBoard extends Component{
         this.getToken = this.getToken.bind(this);
         this.goTo = this.goTo.bind(this);
         this._handleClose = this._handleClose.bind(this);
+        this._handleUpload = this._handleUpload.bind(this);
         this.socket = openSocket('http://localhost:8001');
         this.state = {
             messages : [],
@@ -103,6 +104,23 @@ class ChatBoard extends Component{
         window.location.reload(true);
     }
 
+    async _handleUpload(acceptedFiles){
+        console.log(acceptedFiles);
+        console.log(this.state.link);
+        const data = new FormData();
+        data.append('photo', acceptedFiles[0]);
+        data.append('pid', this.state.link);
+        const resp = await fetch("http://localhost:8000/api/addphoto", {
+             method: 'POST',
+             headers: {
+                  Authorization: 'Bearer ' + await this.props.auth.getAccessToken(),
+                 'Accept': 'application/json',
+             },
+             body: data
+        })
+        console.log("good");
+    }
+
     render() {
         return(
             <div className="columns is-fullheight" style={{height: "89vh"}}>
@@ -122,7 +140,7 @@ class ChatBoard extends Component{
                 >
                     <DialogTitle id="form-dialog-title">Image Upload</DialogTitle>
                     <DialogContent>
-                        <Dropzone onDrop={acceptedFiles => console.log(acceptedFiles)}>
+                        <Dropzone onDrop={this._handleUpload}>
                             {({getRootProps, getInputProps}) => (
                                 <section>
                                 <div {...getRootProps()} style={{height: "20vh", borderStyle: "dotted"}}>

@@ -1,8 +1,16 @@
+require('dotenv').config();
 var express = require('express');
 const OktaJwtVerifier = require('@okta/jwt-verifier');
 const okta = require('@okta/okta-sdk-nodejs');
 var router = express.Router();
 var path = require('path');
+var multer  = require('multer');
+
+const storage = require('multer-gridfs-storage')({
+  url: process.env.MONGO_URI
+});
+
+var upload = multer({ storage: storage });
 
 var Problem = require('../models/problem.js');
 
@@ -93,6 +101,19 @@ router.post('/api/addcredits/:no', authenticationRequired, function(req, res){
     console.log(req.params.no);
     user.update()
     .then(() => res.send({good: "yes"}));
+  });
+});
+
+router.post('/api/addphoto', authenticationRequired, upload.single("photo"), function(req, res){
+  Problem.findOne({_id: req.body.pid, studentId: req.jwt.claims.uid}, function(err, p){
+    if(err){throw err}
+    else{
+      p.GRIDid = req.file.id;
+      p.save(function(err, pr){
+        res.status(200);
+        res.send("done");
+      })
+    }
   });
 });
 
