@@ -89,7 +89,8 @@ class PrivateRoom extends Component{
             whiteboardWidth: 400,
             room: "",
             emojimartshown: false,
-            modalVisible: false
+            modalVisible: false,
+            modalImg: "data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="
         }
     }
 
@@ -131,6 +132,17 @@ class PrivateRoom extends Component{
         var userdata = await this.props.auth.getUser();
         this.setState({name: userdata.name});
         this.socket.emit('makeDetails', {data: userdata, room: this.props.match.params.id});
+        const response = await fetch("http://localhost:8000/api/getphoto/" + this.props.match.params.id, {
+            headers: {
+              "Content-Type": "application/json"
+            },
+            method: "GET",
+        });
+        const responsedata = await response.text();
+        if(responsedata.length > 20){
+            this.setState({modalImg: responsedata});
+        }
+
     }
 
     componentWillUnmount() {
@@ -264,6 +276,7 @@ class PrivateRoom extends Component{
                     <DialogContentText>
                         Room ID: {this.props.match.params.id}
                     </DialogContentText>
+                    <img src={this.state.modalImg} />
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={this._handleClose} color="primary">

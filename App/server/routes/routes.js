@@ -6,6 +6,7 @@ var router = express.Router();
 var path = require('path');
 var multer  = require('multer');
 const MongoClient = require('mongodb');
+var ObjectId = require('mongodb').ObjectID;
 
 const storage = require('multer-gridfs-storage')({
   url: process.env.MONGO_URI
@@ -119,48 +120,55 @@ router.post('/api/addphoto', authenticationRequired, upload.single("photo"), fun
 });
 
 router.get('/api/getphoto/:id', function(req, res){
-  let fileId = req.params.id;
-  //Connect to the MongoDB client
-  MongoClient.connect(process.env.MONGO_URI, function(err, client){
-
-    if(err){
-      res.send("err");
-    }
-    const db = client.db("test");
-    
-    const collection = db.collection('fs.files');
-    const collectionChunks = db.collection('fs.chunks');
-    collection.find({_id: fileId}).toArray(function(err, docs){
-      if(err){
-        res.send("err finding file")
-      }
-      if(!docs || docs.length === 0){
-        res.send("no file found")
-      }else{
-        //Retrieving the chunks from the db
-        collectionChunks.find({files_id : docs[0]._id}).sort({n: 1}).toArray(function(err, chunks){
+  //Gets photo from problem id
+  Problem.findOne({_id: req.params.id}, function(err, p){
+    let fileId = " ";
+    if(p && p.GRIDid){
+      fileId = p.GRIDid || " ";
+      MongoClient.connect(process.env.MONGO_URI, function(err, client){
+        if(err){
+          res.send("err");
+        }
+        const db = client.db("test");
+        
+        const collection = db.collection('fs.files');
+        const collectionChunks = db.collection('fs.chunks');
+        collection.find({_id: ObjectId(fileId)}).toArray(function(err, docs){
           if(err){
-            res.send("err getting chunks")
+            res.send("err finding file")
           }
-          if(!chunks || chunks.length === 0){
-            //No data found
-            res.send("no data found")
+          if(!docs || docs.length === 0){
+            res.send("no file found")
+          }else{
+            //Retrieving the chunks from the db
+            collectionChunks.find({files_id : docs[0]._id}).sort({n: 1}).toArray(function(err, chunks){
+              if(err){
+                res.send("err getting chunks")
+              }
+              if(!chunks || chunks.length === 0){
+                //No data found
+                res.send("no data found")
+              }
+              //Append Chunks
+              let fileData = [];
+              for(let i=0; i<chunks.length;i++){
+                //This is in Binary JSON or BSON format, which is stored
+                //in fileData array in base64 endocoded string format
+                fileData.push(chunks[i].data.toString('base64'));
+              }
+              //Display the chunks using the data URI format
+              let finalFile = 'data:' + docs[0].contentType + ';base64,' + fileData.join('');
+              res.send(finalFile);
+            });
           }
-          //Append Chunks
-          let fileData = [];
-          for(let i=0; i<chunks.length;i++){
-            //This is in Binary JSON or BSON format, which is stored
-            //in fileData array in base64 endocoded string format
-            fileData.push(chunks[i].data.toString('base64'));
-          }
-          //Display the chunks using the data URI format
-          let finalFile = 'data:' + docs[0].contentType + ';base64,' + fileData.join('');
-          res.send(finalFile);
+          
         });
-      }
-      
-    });
-  });
+      });
+    }
+    else{
+      res.send("not found");
+    }
+  })
 });
 
 router.get('/*', function(req, res){
