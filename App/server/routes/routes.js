@@ -27,8 +27,8 @@ const oktaJwtVerifier = new OktaJwtVerifier({
 
 //okta token 00jjwA-cffmIKzA_M50v-0Ke-R2hHNmMKJhXEoJyN3
 const oktaClient = new okta.Client({
-  orgUrl: "https://dev-994297.okta.com/",
-  token: "00jjwA-cffmIKzA_M50v-0Ke-R2hHNmMKJhXEoJyN3",
+  orgUrl: process.env.OKTA_URL,
+  token: process.env.OKTA_TOKEN,
   requestExecutor: new okta.DefaultRequestExecutor()
 });
 

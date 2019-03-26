@@ -8,6 +8,7 @@ var dialogflow = require('./dialogflow.js');
 var okta = require('@okta/okta-sdk-nodejs');
 var mongoose = require("mongoose");
 var vader = require('vader-sentiment');
+var twilio = require('twilio');
 var app = express();
 require('dotenv').config();
 app.set('view engine', 'ejs');
@@ -26,10 +27,27 @@ var Problem = require('./models/problem.js');
 
 // Okta stuff
 const oktaClient = new okta.Client({
-    orgUrl: "https://dev-994297.okta.com/",
-    token: "00jjwA-cffmIKzA_M50v-0Ke-R2hHNmMKJhXEoJyN3",
+    orgUrl: process.env.OKTA_URL,
+    token: process.env.OKTA_TOKEN,
     requestExecutor: new okta.DefaultRequestExecutor()
 });
+
+
+//twilio
+
+var twilioClient = new twilio(process.env.TWILIO_SID, process.env.TWILIO_AUTHTOKEN);
+
+function sendSMStoUser(uid, msg){
+    var coll = oktaClient.listFactors(uid);
+    coll.each(l => {
+      var numb = l.profile.phoneNumber;
+      twilioClient.messages.create({
+          body: msg,
+          to: numb,
+          from: process.env.TWILIO_NUM
+      })
+    });
+  }
 
 
 //dialogflow deets
@@ -200,6 +218,9 @@ priv.on('connection', function(socket){
                 var id = isStudent ? 0 : 1;
                 p.messages.push({id: id, message: msg});
                 p.save();
+                if(!p.isActive && p.isOpen){
+                    sendSMStoUser(p.studentId, "New message on your " + p.subject + " problem: " + '"' + msg + '"');
+                }
             }
         });
     });

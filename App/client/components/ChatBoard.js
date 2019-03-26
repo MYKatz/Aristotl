@@ -105,8 +105,6 @@ class ChatBoard extends Component{
     }
 
     async _handleUpload(acceptedFiles){
-        console.log(acceptedFiles);
-        console.log(this.state.link);
         const data = new FormData();
         data.append('photo', acceptedFiles[0]);
         data.append('pid', this.state.link);
@@ -117,8 +115,9 @@ class ChatBoard extends Component{
                  'Accept': 'application/json',
              },
              body: data
-        })
-        console.log("good");
+        });
+        this.props.history.push("/private/"+this.state.link);
+        window.location.reload(true);
     }
 
     render() {
