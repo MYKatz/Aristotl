@@ -7,6 +7,9 @@ var path = require('path');
 var multer  = require('multer');
 const MongoClient = require('mongodb');
 var ObjectId = require('mongodb').ObjectID;
+var AccessToken = require('twilio').jwt.AccessToken;
+var VideoGrant = AccessToken.VideoGrant;
+const uuidv1 = require('uuid/v1');
 
 const storage = require('multer-gridfs-storage')({
   url: process.env.MONGO_URI
@@ -169,6 +172,27 @@ router.get('/api/getphoto/:id', function(req, res){
       res.send("not found");
     }
   })
+});
+
+router.get('/api/gettwiliotoken', function(req, res){
+  var token = new AccessToken(
+      process.env.TWILIO_SID,
+      process.env.TWILIO_VIDEO_KEY,
+      process.env.TWILIO_VIDEO_SECRET
+  );
+
+  var identity = uuidv1();
+
+  token.identity = identity;
+
+  const grant = new VideoGrant();
+  // Grant token access to the Video API features
+  token.addGrant(grant);
+
+  res.send({
+      token: token.toJwt(),
+      identity: identity
+  });
 });
 
 router.get('/*', function(req, res){

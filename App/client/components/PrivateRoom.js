@@ -33,6 +33,7 @@ import ExitToApp from '@material-ui/icons/ExitToApp';
 import Info from '@material-ui/icons/Info';
 import Close from '@material-ui/icons/Close';
 
+import Video from 'twilio-video';
 
 const theme = createMuiTheme({
   palette: {
@@ -83,6 +84,12 @@ class PrivateRoom extends Component{
         this.openModal = this.openModal.bind(this);
         this._handleClose = this._handleClose.bind(this);
         this.closeHandler = this.closeHandler.bind(this);
+
+        this.getTwilio = this.getTwilio.bind(this);
+        this.openMic = this.openMic.bind(this);
+        this.roomJoined = this.roomJoined.bind(this);
+        this.containerRef = React.createRef();
+
         this.whiteboardRef = React.createRef();
         this.socket = openSocket('http://localhost:8001/private');
         this.state = {
@@ -95,7 +102,9 @@ class PrivateRoom extends Component{
             emojimartshown: false,
             modalVisible: false,
             modalImg: "data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==",
-            isStudent: false
+            isStudent: false,
+            twilioToken: "",
+            identity: null
         }
     }
 
@@ -131,6 +140,7 @@ class PrivateRoom extends Component{
         this.socket.on('draw', this.updateWhiteboard);
         this.socket.on('messages', this.setMessages);
         this.getToken();
+        this.getTwilio();
     }
 
     async getToken(){
@@ -149,6 +159,18 @@ class PrivateRoom extends Component{
             this.setState({modalImg: responsedata});
         }
 
+    }
+
+    async getTwilio(){
+        const response = await fetch("http://localhost:8000/api/gettwiliotoken", {
+            headers: {
+              "Content-Type": "application/json"
+            },
+            method: "GET",
+        });
+        const responsedata = await response.json();
+        this.setState({twilioToken: responsedata.token});
+        this.setState({identity: responsedata.identity});
     }
 
     componentWillUnmount() {
@@ -223,6 +245,29 @@ class PrivateRoom extends Component{
         this.setState({modalVisible: false});
     }
 
+    openMic(){
+        console.log("Joining room '" + this.props.match.params.id + "'...");
+        let connectOptions = {
+            name: this.props.match.params.id,
+            RecordParticipantsOnConnect: true
+        };
+        Video.connect(this.state.twilioToken, connectOptions).then(this.roomJoined, error => {
+			alert('Could not connect to Twilio: ' + error.message);
+		});
+    }
+
+    roomJoined(room){
+        //handle room joined
+        console.log(room);
+        var participant = room.localParticipant;
+        var tracks = Array.from(participant.tracks.values());
+        console.log(tracks);
+		tracks.forEach(track => {
+            this.containerRef.current.appendChild(track.attach());
+            console.log("adding...")
+		});
+    }
+
     render() {
         const { classes } = this.props;
         return(
@@ -269,13 +314,15 @@ class PrivateRoom extends Component{
                                     messages={this.state.messages} 
                                     showSenderName
                                 />
-                                <div className="inputbox control has-icons-right">
+                                <div className="inputbox control has-icons-right has-icons-left">
                                     <input className="input is-rounded typemsg" type="text" value={this.state.inputvalue} onChange={this._handleChange} onKeyPress={this._handleKeyPress} placeholder="Type a message..."/>
                                     <span className="icon is-small is-right" style={{pointerEvents: "auto", cursor: "pointer", userSelect: "none"}} onClick={this.emojiHandler}>😃</span>
+                                    <span className="icon is-small is-left" style={{pointerEvents: "auto", cursor: "pointer", userSelect: "none"}} onClick={this.openMic}>🎙️</span>
                                     {this.state.emojimartshown &&
                                         <span style={{position: "absolute", right: 0, top: "-60vh"}}><Picker onSelect={this.addEmoji}/></span>
                                     }
                                 </div>
+                                <div ref={this.containerRef} />
                             </div>
                             <div className="column whiteboard" id="wb" onMouseUp={this._handleUp} onContextMenu={this._handleClick}>
                                 <CanvasDraw ref={canvasDraw => (this.whiteboardRef = canvasDraw)} canvasHeight={this.state.whiteboardHeight} canvasWidth={this.state.whiteboardWidth} brushRadius={2} lazyRadius={0}/>
