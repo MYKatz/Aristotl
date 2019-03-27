@@ -76,6 +76,9 @@ const styles = theme => ({
     left: 0,
     zIndex: 1250,
   },
+  invisible: {
+    display: "none",
+  }
 });
 
 class PrivateRoom extends Component{
@@ -124,7 +127,8 @@ class PrivateRoom extends Component{
             modalImg: "data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==",
             isStudent: false,
             twilioToken: "",
-            identity: null
+            identity: null,
+            showDraggable: false,
         }
     }
 
@@ -320,6 +324,7 @@ class PrivateRoom extends Component{
         room.on("trackAdded", (track, participant)=> {
             console.log(participant.identity + " added track: " + track.kind);
             var previewContainer = document.getElementById("remote-media");
+            this.setState({showDraggable: true});
             this.attachTracks([track], previewContainer);
         });
 
@@ -333,6 +338,7 @@ class PrivateRoom extends Component{
         room.on("participantDisconnected", (participant)=> {
             console.log("Participant '" + participant.identity + "' left the room");
             this.detachParticipantTracks(participant);
+            this.setState({showDraggable: false});
         });
 
         // Once the LocalParticipant leaves the room, detach the Tracks
@@ -347,6 +353,7 @@ class PrivateRoom extends Component{
             this.detachParticipantTracks(room.localParticipant);
             room.participants.forEach(this.detachParticipantTracks);
             this.activeRoom = null;
+            this.setState({showDraggable: false});
         });
     }
 
@@ -478,7 +485,7 @@ class PrivateRoom extends Component{
                     </DialogActions>
                 </Dialog>
                 <Draggable bounds="parent">
-                    <Card className={classes.card}>
+                    <Card className={this.state.showDraggable ? classes.card : classes.invisible}>
                         <CardContent id="remote-media">
                         </CardContent>
                     </Card>
