@@ -499,7 +499,7 @@ class PrivateRoom extends Component{
                         <CardContent id="remote-media">
                         </CardContent>
                         <CardActions>
-                            <Button size="small" onClick={this.openMic}>Learn More</Button>
+                            <Button size="small" onClick={this.openMic}>Close Call</Button>
                         </CardActions>
                     </Card>
                 </Draggable>
