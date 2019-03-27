@@ -89,6 +89,10 @@ class PrivateRoom extends Component{
         this.openMic = this.openMic.bind(this);
         this.roomJoined = this.roomJoined.bind(this);
         this.containerRef = React.createRef();
+        this.activeRoom = null;
+        this.previewTracks = null;
+        this.identity = null;
+        this.roomName = null;
 
         this.whiteboardRef = React.createRef();
         this.socket = openSocket('http://localhost:8001/private');
@@ -256,10 +260,11 @@ class PrivateRoom extends Component{
 		});
     }
 
-    roomJoined(room){
+    roomJoinedOld(room){
         //handle room joined
         console.log(room);
         var participant = room.localParticipant;
+        var previewContainer = this.containerRef.current;
         var tracks = Array.from(participant.tracks.values());
         console.log(tracks);
 		tracks.forEach(track => {
@@ -267,6 +272,91 @@ class PrivateRoom extends Component{
             console.log("adding...")
 		});
     }
+
+    roomJoined(room) {
+        this.activeRoom = room;
+        window.room = room.name;
+
+        console.log("Joined as '" + this.identity + "'");
+
+        // Attach LocalParticipant's Tracks, if not already attached.
+        var previewContainer = this.containerRef.current;
+        if (!previewContainer.querySelector("video")) {
+            this.attachParticipantTracks(room.localParticipant, previewContainer);
+        }
+
+        // Attach the Tracks of the Room's Participants.
+        room.participants.forEach((participant)=> {
+            console.log("Already in Room: '" + participant.identity + "'");
+            var previewContainer = document.getElementById("remote-media");
+            this.attachParticipantTracks(participant, previewContainer);
+        });
+
+        // When a Participant joins the Room, log the event.
+        room.on("participantConnected", (participant)=> {
+            console.log("Joining: '" + participant.identity + "'");
+        });
+
+        // When a Participant adds a Track, attach it to the DOM.
+        room.on("trackAdded", (track, participant)=> {
+            console.log(participant.identity + " added track: " + track.kind);
+            var previewContainer = document.getElementById("remote-media");
+            this.attachTracks([track], previewContainer);
+        });
+
+        // When a Participant removes a Track, detach it from the DOM.
+        room.on("trackRemoved", (track, participant)=> {
+            console.log(participant.identity + " removed track: " + track.kind);
+            this.detachTracks([track]);
+        });
+
+        // When a Participant leaves the Room, detach its Tracks.
+        room.on("participantDisconnected", (participant)=> {
+            console.log("Participant '" + participant.identity + "' left the room");
+            this.detachParticipantTracks(participant);
+        });
+
+        // Once the LocalParticipant leaves the room, detach the Tracks
+        // of all Participants, including that of the LocalParticipant.
+        room.on("disconnected", ()=> {
+            console.log("Left");
+            if (this.previewTracks) {
+                this.previewTracks.forEach((track)=> {
+                    track.stop();
+                });
+            }
+            this.detachParticipantTracks(room.localParticipant);
+            room.participants.forEach(this.detachParticipantTracks);
+            this.activeRoom = null;
+        });
+    }
+
+    attachTracks(tracks, container) {
+        tracks.forEach((track)=> {
+            container.appendChild(track.attach());
+        });
+    }
+
+    attachParticipantTracks(participant, container) {
+        var tracks = Array.from(participant.tracks.values());
+        this.attachTracks(tracks, container);
+    }
+    
+
+    detachTracks(tracks) {
+        tracks.forEach((track)=> {
+            track.detach().forEach((detachedElement)=> {
+                detachedElement.remove();
+            });
+        });
+    }
+
+    detachParticipantTracks(participant) {
+        var tracks = Array.from(participant.tracks.values());
+        this.detachTracks(tracks);
+    }
+
+
 
     render() {
         const { classes } = this.props;
@@ -323,6 +413,7 @@ class PrivateRoom extends Component{
                                     }
                                 </div>
                                 <div ref={this.containerRef} />
+                                <div id="remote-media"/>
                             </div>
                             <div className="column whiteboard" id="wb" onMouseUp={this._handleUp} onContextMenu={this._handleClick}>
                                 <CanvasDraw ref={canvasDraw => (this.whiteboardRef = canvasDraw)} canvasHeight={this.state.whiteboardHeight} canvasWidth={this.state.whiteboardWidth} brushRadius={2} lazyRadius={0}/>
