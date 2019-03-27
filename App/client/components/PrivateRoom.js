@@ -88,6 +88,7 @@ class PrivateRoom extends Component{
         this.getTwilio = this.getTwilio.bind(this);
         this.openMic = this.openMic.bind(this);
         this.roomJoined = this.roomJoined.bind(this);
+        this.receiveCall = this.receiveCall.bind(this);
         this.containerRef = React.createRef();
         this.activeRoom = null;
         this.previewTracks = null;
@@ -143,6 +144,7 @@ class PrivateRoom extends Component{
         this.socket.on('chat', this.updateMessages);
         this.socket.on('draw', this.updateWhiteboard);
         this.socket.on('messages', this.setMessages);
+        this.socket.on('opencall', this.receiveCall);
         this.getToken();
         this.getTwilio();
     }
@@ -247,30 +249,32 @@ class PrivateRoom extends Component{
 
     _handleClose(){
         this.setState({modalVisible: false});
+        this.setState({callModal: false});
+    }
+
+    receiveCall(){
+        if(!this.activeRoom){
+            //open modal if not already in call
+            this.setState({callModal: true});
+        }
     }
 
     openMic(){
-        console.log("Joining room '" + this.props.match.params.id + "'...");
-        let connectOptions = {
-            name: this.props.match.params.id,
-            RecordParticipantsOnConnect: true
-        };
-        Video.connect(this.state.twilioToken, connectOptions).then(this.roomJoined, error => {
-			alert('Could not connect to Twilio: ' + error.message);
-		});
-    }
-
-    roomJoinedOld(room){
-        //handle room joined
-        console.log(room);
-        var participant = room.localParticipant;
-        var previewContainer = this.containerRef.current;
-        var tracks = Array.from(participant.tracks.values());
-        console.log(tracks);
-		tracks.forEach(track => {
-            this.containerRef.current.appendChild(track.attach());
-            console.log("adding...")
-		});
+        if(!this.activeRoom){
+            console.log("Joining room '" + this.props.match.params.id + "'...");
+            this._handleClose();
+            let connectOptions = {
+                name: this.props.match.params.id,
+                RecordParticipantsOnConnect: true
+            };
+            Video.connect(this.state.twilioToken, connectOptions).then(this.roomJoined, error => {
+                alert('Could not connect to Twilio: ' + error.message);
+            });
+        }
+        else{
+            //close mic & video
+            this.activeRoom.disconnect();
+        }
     }
 
     roomJoined(room) {
@@ -278,7 +282,7 @@ class PrivateRoom extends Component{
         window.room = room.name;
 
         console.log("Joined as '" + this.identity + "'");
-
+        this.socket.emit('opencall', ""); //send notification to other user
         // Attach LocalParticipant's Tracks, if not already attached.
         var previewContainer = this.containerRef.current;
         if (!previewContainer.querySelector("video")) {
@@ -407,7 +411,7 @@ class PrivateRoom extends Component{
                                 <div className="inputbox control has-icons-right has-icons-left">
                                     <input className="input is-rounded typemsg" type="text" value={this.state.inputvalue} onChange={this._handleChange} onKeyPress={this._handleKeyPress} placeholder="Type a message..."/>
                                     <span className="icon is-small is-right" style={{pointerEvents: "auto", cursor: "pointer", userSelect: "none"}} onClick={this.emojiHandler}>😃</span>
-                                    <span className="icon is-small is-left" style={{pointerEvents: "auto", cursor: "pointer", userSelect: "none"}} onClick={this.openMic}>🎙️</span>
+                                    <span className="icon is-small is-left" style={{pointerEvents: "auto", cursor: "pointer", userSelect: "none"}} onClick={this.openMic}>📷</span>
                                     {this.state.emojimartshown &&
                                         <span style={{position: "absolute", right: 0, top: "-60vh"}}><Picker onSelect={this.addEmoji}/></span>
                                     }
@@ -437,6 +441,25 @@ class PrivateRoom extends Component{
                     <DialogActions>
                         <Button onClick={this._handleClose} color="primary">
                         Close
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+                <Dialog
+                open={this.state.callModal}
+                aria-labelledby="form-dialog-title"
+                >
+                    <DialogTitle id="form-dialog-title">Room Info</DialogTitle>
+                    <DialogContent>
+                    <DialogContentText>
+                        You're getting a call. Answer it?
+                    </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={this.openMic} color="primary">
+                            Yeah
+                        </Button>
+                        <Button onClick={this._handleClose} color="primary">
+                            Nope
                         </Button>
                     </DialogActions>
                 </Dialog>

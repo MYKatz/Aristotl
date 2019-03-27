@@ -269,6 +269,10 @@ priv.on('connection', function(socket){
         });
     });
 
+    socket.on("opencall", function(){
+        socket.to(room).emit('opencall', "");
+    });
+
 });
 
 io.listen(8001); //listen on port 8001
