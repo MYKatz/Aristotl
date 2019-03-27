@@ -69,8 +69,8 @@ const styles = theme => ({
   toolbar: theme.mixins.toolbar,
   card: {
     minWidth: 275,
-    maxWidth: "30vw",
-    maxHeight: "60vh",
+    maxWidth: "20vw",
+    maxHeight: "40vh",
     position: "absolute",
     bottom: 0,
     left: 0,
@@ -338,6 +338,16 @@ class PrivateRoom extends Component{
         room.on("participantDisconnected", (participant)=> {
             console.log("Participant '" + participant.identity + "' left the room");
             this.detachParticipantTracks(participant);
+            //and close the call for the local participant as well.
+            if (this.previewTracks) {
+                this.previewTracks.forEach((track)=> {
+                    track.stop();
+                });
+            }
+            this.activeRoom.disconnect();
+            this.detachParticipantTracks(room.localParticipant);
+            room.participants.forEach(this.detachParticipantTracks);
+            this.activeRoom = null;
             this.setState({showDraggable: false});
         });
 
@@ -488,6 +498,9 @@ class PrivateRoom extends Component{
                     <Card className={this.state.showDraggable ? classes.card : classes.invisible}>
                         <CardContent id="remote-media">
                         </CardContent>
+                        <CardActions>
+                            <Button size="small" onClick={this.openMic}>Learn More</Button>
+                        </CardActions>
                     </Card>
                 </Draggable>
         </MuiThemeProvider>
