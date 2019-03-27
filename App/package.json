@@ -30,6 +30,7 @@
     "react-canvas-draw": "^1.0.0",
     "react-chat-ui": "^0.3.2",
     "react-dom": "^16.8.4",
+    "react-draggable": "^3.2.1",
     "react-dropzone": "^10.0.6",
     "react-emoji-render": "^0.6.0",
     "react-modal": "^3.8.1",

@@ -6,6 +6,8 @@ import openSocket from 'socket.io-client';
 import { ChatFeed, Message } from 'react-chat-ui';
 import { Picker } from 'emoji-mart';
 
+import Draggable from 'react-draggable';
+
 import 'emoji-mart/css/emoji-mart.css';
 
 import { withStyles } from '@material-ui/core/styles';
@@ -28,6 +30,9 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
 
 import ExitToApp from '@material-ui/icons/ExitToApp';
 import Info from '@material-ui/icons/Info';
@@ -62,6 +67,15 @@ const styles = theme => ({
     padding: theme.spacing.unit * 3,
   },
   toolbar: theme.mixins.toolbar,
+  card: {
+    minWidth: 275,
+    maxWidth: "30vw",
+    maxHeight: "60vh",
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    zIndex: 1250,
+  },
 });
 
 class PrivateRoom extends Component{
@@ -89,6 +103,7 @@ class PrivateRoom extends Component{
         this.openMic = this.openMic.bind(this);
         this.roomJoined = this.roomJoined.bind(this);
         this.receiveCall = this.receiveCall.bind(this);
+        this.detachParticipantTracks = this.detachParticipantTracks.bind(this);
         this.containerRef = React.createRef();
         this.activeRoom = null;
         this.previewTracks = null;
@@ -285,9 +300,9 @@ class PrivateRoom extends Component{
         this.socket.emit('opencall', ""); //send notification to other user
         // Attach LocalParticipant's Tracks, if not already attached.
         var previewContainer = this.containerRef.current;
-        if (!previewContainer.querySelector("video")) {
-            this.attachParticipantTracks(room.localParticipant, previewContainer);
-        }
+        //if (!previewContainer.querySelector("video")) {
+            //this.attachParticipantTracks(room.localParticipant, previewContainer);
+        //}
 
         // Attach the Tracks of the Room's Participants.
         room.participants.forEach((participant)=> {
@@ -417,9 +432,8 @@ class PrivateRoom extends Component{
                                     }
                                 </div>
                                 <div ref={this.containerRef} />
-                                <div id="remote-media"/>
                             </div>
-                            <div className="column whiteboard" id="wb" onMouseUp={this._handleUp} onContextMenu={this._handleClick}>
+                            <div className="column whiteboard" id="wb" onMouseUp={this._handleUp} onContextMenu={this._handleClick} style={{zIndex: 0}}>
                                 <CanvasDraw ref={canvasDraw => (this.whiteboardRef = canvasDraw)} canvasHeight={this.state.whiteboardHeight} canvasWidth={this.state.whiteboardWidth} brushRadius={2} lazyRadius={0}/>
 
                             </div>
@@ -463,8 +477,13 @@ class PrivateRoom extends Component{
                         </Button>
                     </DialogActions>
                 </Dialog>
+                <Draggable bounds="parent">
+                    <Card className={classes.card}>
+                        <CardContent id="remote-media">
+                        </CardContent>
+                    </Card>
+                </Draggable>
         </MuiThemeProvider>
-
 
         
         )
