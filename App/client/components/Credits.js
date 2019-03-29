@@ -36,7 +36,7 @@ class Credits extends Component{
             object[key] = value;
         });
         try {
-          const response = await fetch('http://localhost:8000/api/addcredits/' + object.creds, {
+          const response = await fetch('https://aristotl.xyz/api/addcredits/' + object.creds, {
             headers: {
               Authorization: 'Bearer ' + await this.props.auth.getAccessToken(),
               "Content-Type": "application/json"

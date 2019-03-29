@@ -16,7 +16,7 @@ class TutorBoard extends Component{
 
     async getData(){
         try{
-            const response = await fetch('http://localhost:8000/api/getProblems', {
+            const response = await fetch('https://aristotl.xyz/api/getProblems', {
                 headers: {
                     Authorization: 'Bearer ' + await this.props.auth.getAccessToken(),
                     "Content-Type": "application/json"

@@ -27,7 +27,7 @@ class ChatBoard extends Component{
         this.goTo = this.goTo.bind(this);
         this._handleClose = this._handleClose.bind(this);
         this._handleUpload = this._handleUpload.bind(this);
-        this.socket = openSocket('http://localhost:8001');
+        this.socket = openSocket('https://aristotl.xyz:80');
         this.state = {
             messages : [],
             messagejsx : [],
@@ -108,7 +108,7 @@ class ChatBoard extends Component{
         const data = new FormData();
         data.append('photo', acceptedFiles[0]);
         data.append('pid', this.state.link);
-        const resp = await fetch("http://localhost:8000/api/addphoto", {
+        const resp = await fetch("https://aristotl.xyz/api/addphoto", {
              method: 'POST',
              headers: {
                   Authorization: 'Bearer ' + await this.props.auth.getAccessToken(),

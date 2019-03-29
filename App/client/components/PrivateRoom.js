@@ -114,7 +114,8 @@ class PrivateRoom extends Component{
         this.roomName = null;
 
         this.whiteboardRef = React.createRef();
-        this.socket = openSocket('http://localhost:8001/private');
+        this.socket = openSocket('https://aristotl.xyz:80/private');
+        console.log('https://aristotl.xyz:80/private');
         this.state = {
             messages : [],
             messagejsx : [],
@@ -173,7 +174,7 @@ class PrivateRoom extends Component{
         this.setState({name: userdata.name});
         this.setState({isStudent: !userdata.isTutor})
         this.socket.emit('makeDetails', {data: userdata, room: this.props.match.params.id});
-        const response = await fetch("http://localhost:8000/api/getphoto/" + this.props.match.params.id, {
+        const response = await fetch("https://aristotl.xyz/api/getphoto/" + this.props.match.params.id, {
             headers: {
               "Content-Type": "application/json"
             },
@@ -187,7 +188,7 @@ class PrivateRoom extends Component{
     }
 
     async getTwilio(){
-        const response = await fetch("http://localhost:8000/api/gettwiliotoken", {
+        const response = await fetch("https://aristotl.xyz/api/gettwiliotoken", {
             headers: {
               "Content-Type": "application/json"
             },

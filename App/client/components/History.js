@@ -14,7 +14,7 @@ class History extends Component{
     }
 
     async getData(){
-        const response = await fetch('http://localhost:8000/api/getUserProblems', {
+        const response = await fetch('https://aristotl.xyz/api/getUserProblems', {
             headers: {
                 Authorization: 'Bearer ' + await this.props.auth.getAccessToken(),
                 "Content-Type": "application/json"

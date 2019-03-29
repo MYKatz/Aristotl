@@ -39,7 +39,7 @@ class Settings extends Component{
         });
         var bodyjson = JSON.stringify(object);
         try {
-          const response = await fetch('http://localhost:8000/api', {
+          const response = await fetch('https://aristotl.xyz/api', {
             headers: {
               Authorization: 'Bearer ' + await this.props.auth.getAccessToken(),
               "Content-Type": "application/json"

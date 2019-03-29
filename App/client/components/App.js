@@ -11,7 +11,7 @@ import PrivateRoom from './PrivateRoom';
 const config = {
   issuer: 'https://dev-994297.okta.com/oauth2/default',
   //issuer: 'https://okta.aristotl.xyz/oauth2/default',
-  redirect_uri: 'http://localhost:8000/implicit/callback',
+  redirect_uri: 'https://aristotl.xyz/implicit/callback',
   client_id: '0oacpwujcUNre4PDC356',
   scope: ['openid', 'email', 'profile', 'groups'],
   idps: [

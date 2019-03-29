@@ -9,6 +9,7 @@ var okta = require('@okta/okta-sdk-nodejs');
 var mongoose = require("mongoose");
 var vader = require('vader-sentiment');
 var twilio = require('twilio');
+var fs = require("fs");
 var app = express();
 require('dotenv').config();
 app.set('view engine', 'ejs');
@@ -18,6 +19,15 @@ app.set('views', path.join(__dirname, '../client'));
 app.use(express.static(path.join(__dirname, '../client')));
 app.use('/', router);
 app.use(cors());
+
+//express stuff on the same port.
+var port = process.env.PORT || 8000;
+const options = {
+    key: fs.readFileSync("./server/certs/key.pem"),
+    cert: fs.readFileSync("./server/certs/cert.pem")
+}
+server = require('http').createServer(options, app);
+
 
 //Mongoose stuff
 mongoose.promise = global.Promise;
@@ -69,7 +79,8 @@ socket : {
 
 
 //websocket stuff
-const io = require('socket.io')();
+var io = require('socket.io')();
+io = io.listen(server);
 
 async function replyWithDialogFlow(socket, msg){
     var responses = await df.sendTextMessageToDialogFlow(msg, socket.id);
@@ -275,7 +286,9 @@ priv.on('connection', function(socket){
 
 });
 
-io.listen(8001); //listen on port 8001
+//io.listen(80); //listen on port 80
+
+server.listen(port);
 
 
 module.exports=app;
