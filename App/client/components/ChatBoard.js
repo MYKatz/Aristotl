@@ -27,7 +27,7 @@ class ChatBoard extends Component{
         this.goTo = this.goTo.bind(this);
         this._handleClose = this._handleClose.bind(this);
         this._handleUpload = this._handleUpload.bind(this);
-        this.socket = openSocket('https://aristotl.xyz:80');
+        this.socket = openSocket('https://aristotl.xyz:443');
         this.state = {
             messages : [],
             messagejsx : [],

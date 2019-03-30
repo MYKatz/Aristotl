@@ -114,8 +114,8 @@ class PrivateRoom extends Component{
         this.roomName = null;
 
         this.whiteboardRef = React.createRef();
-        this.socket = openSocket('https://aristotl.xyz:80/private');
-        console.log('https://aristotl.xyz:80/private');
+        this.socket = openSocket('https://aristotl.xyz:443/private');
+        console.log('https://aristotl.xyz:443/private');
         this.state = {
             messages : [],
             messagejsx : [],
