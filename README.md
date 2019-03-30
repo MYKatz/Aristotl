@@ -1,27 +1,33 @@
-Fill this in later
-
+For the Oktane19 global hackathon. Check out my devpost posting [here](https://devpost.com/software/aristotl)
 
 ## Inspiration & Business Value
 
-- Private teaching industry is huge (get stats)
-- Saw from my own experiences that students generally wanted to seek out more informal, conversational ways of getting help (ie discord chatrooms etc)
-- Kind of 'open sourcing' the learning process and help people explain concepts to others
-- Inspired by companies that have applied this business model to programming, such as Hackhands (acquired by Pluralsight) and Codementor (raised $3.4M in their seed + series A rounds)
+When conversing in group chats with other students, I noticed that many people often posted homework problems that they needed help with. However, often times their questions went unanswered, or the answers they got were unhelpful. That lead me to the idea of a more "conversational" academic assistance service - a platform on which students can easily ask bite-sized questions and instantaneously receive answers.
+
+I was inspired by HackHands (acquired by Pluralsight in 2015) and CodeMentor (which has raised $3.4M to date), both services that introduced this model to the programming community. I thought that the same model could be applied to other subjects, and so I created Aristotl.
+
+Note that while the web app is primarily targeted towards students for now, it could very easily be converted to instead be a platform for technical support, or for job training questions, etc. The sky's the limit! 
 
 ## What it does
 
-## Functionality
+(Check out the demo video above!! :) )
+
+A student, needing help with a question, registers for Aristotl - either with an email/pass or with a Google/Facebook account. After entering their information and purchasing credits (for now, just a proof-of-concept - no payment necessary!), the user can converse with an intelligent chatbot that will diagnose their problem. The chatbot can generally determine the subject without being told specifically what it is; ie if a user inputs "I can't do this integral" it'll correctly classify it as a calculus problem. After conversing with the chatbot the user is directed to upload an image of their problem, then is redirected into a private room.
+
+The "tutor" can then enter the private room and converse in real time with the "student". To help illustrate certain concepts, the teacher & student can draw on a collaborative whiteboard component, which updates in real time using websockets. If necessary, either the student or the teacher can initiate a video call with the student by pressing the camera icon.
+
+There are a few more features under-the-hood... here's a full list:
 
 ## Features
 
-- Real-time scalable chat with websockets
-- Also a real-time 'whiteboard' component that teachers can use
+- Real-time chat with websockets
+- Real-time 'whiteboard' component that teachers can use
 - User can edit data such as gradelevel/biography/account type for better classification
 - Separate dashboards and user types (one for students, one for teachers)
 - Students initialize their problem by conversing with an intelligent chatbot
 - Chatbot uses NLP (Google Dialogflow) to determine intent and subject of the problem
-- Emoji picker for user-to-user chatrooms  (:D)
 - Sentiment analysis using the VADER model
+- Emoji picker for user-to-user chatrooms  (:D)
 - Credits system (perhaps some business viability there... but just a proof-of-concept for now)
 - History + auto-saving feature, allowing students to re-open their issue if need be
 - Image uploads + storage w/ GRIDFS
@@ -55,3 +61,22 @@ In this project, twilio was used in two ways:
 
 ## How I built it
 
+This was built using the MERN stack - Mongo, Express, React, Node.js. As mentioned earlier, all userdata is stored in Okta, Mongo is only used to store each problem's information. Websockets were used to implement real-time communication between users, and Dialogflow powers the chatbot.
+
+## Challenges I ran into
+
+This was the first time I've used react to build a full web app, so everything to do with that required some learning.
+
+## Accomplishments that I'm proud of
+
+Finishing in time :)
+
+## What I learned
+
+A lot about React.js and related stuff.
+
+Also, I learned that Okta is pretty cool! Definitely a time/energy saver for future hackathons, and it was a blast figuring out all the neat things that Okta can do out-of-the-box.
+
+## What's next for Aristotl
+
+Who knows? I'll try to do some validation to see if this is something that people will actually want/use, and if that results in positive feedback I'll do some more work on the UI and functionality and perhaps launch it. As I noted earlier, I'm not super certain that students are the best target market for this, so I'll also see if there's a better niche that I can serve with Aristotl!
