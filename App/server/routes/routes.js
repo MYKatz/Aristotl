@@ -195,6 +195,10 @@ router.get('/api/gettwiliotoken', function(req, res){
   });
 });
 
+router.get('/', function(req, res){
+  res.render('landing')
+});
+
 router.get('/*', function(req, res){
   res.render('index')
 });

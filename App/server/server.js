@@ -17,6 +17,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.set('views', path.join(__dirname, '../client'));
 app.use(express.static(path.join(__dirname, '../client')));
+app.use("/landing", express.static(path.join(__dirname, '../landing')));
 app.use('/', router);
 app.use(cors());
 

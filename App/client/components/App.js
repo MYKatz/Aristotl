@@ -28,7 +28,7 @@ class App extends Component {
                   scope={['openid', 'email', 'profile', 'groups']}
                   redirect_uri={config.redirect_uri}
         >
-          <Route path="/" exact component={Login} />
+          <Route path="/login" exact component={Login} />
           <Route path='/implicit/callback' component={ImplicitCallback}/>
           <SecureRoute path="/dash" component={Dash}/>
           <SecureRoute path="/private/:id" component={PrivateRoom}/>
