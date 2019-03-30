@@ -1,68 +1,57 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Fill this in later
 
-## Available Scripts
 
-In the project directory, you can run:
+## Inspiration & Business Value
 
-### `npm start`
+- Private teaching industry is huge (get stats)
+- Saw from my own experiences that students generally wanted to seek out more informal, conversational ways of getting help (ie discord chatrooms etc)
+- Kind of 'open sourcing' the learning process and help people explain concepts to others
+- Inspired by companies that have applied this business model to programming, such as Hackhands (acquired by Pluralsight) and Codementor (raised $3.4M in their seed + series A rounds)
 
-Runs the app in the development mode.<br>
-Open [https://localhost:3000](https://localhost:3000) to view it in the browser.
+## What it does
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+## Functionality
 
-### `npm test`
+## Features
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- Real-time scalable chat with websockets
+- Also a real-time 'whiteboard' component that teachers can use
+- User can edit data such as gradelevel/biography/account type for better classification
+- Separate dashboards and user types (one for students, one for teachers)
+- Students initialize their problem by conversing with an intelligent chatbot
+- Chatbot uses NLP (Google Dialogflow) to determine intent and subject of the problem
+- Emoji picker for user-to-user chatrooms  (:D)
+- Sentiment analysis using the VADER model
+- Credits system (perhaps some business viability there... but just a proof-of-concept for now)
+- History + auto-saving feature, allowing students to re-open their issue if need be
+- Image uploads + storage w/ GRIDFS
+- SMS updates for students when they're offline but their question receives a response 
+- Optional Audio/Video calls - with a cool draggable container! (check out the demo video)
 
-### `npm run build`
+## Integrations
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Okta
 
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
+This was my first time using any of Okta's tools - but it won't be the last! Working with Okta's libraries was amazing, and it saved me the headache of having to implement auth using something like passport. Thanks Okta!
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+These were the Okta features I used:
 
-### `npm run eject`
+- Basic email/password authentication
+- Social authentication providers (I used Google and FB)
+- Multi-Factor Authentication with SMS
+- Self-service registration
+- Custom login page (background & logo)
+- Custom attributes and scopes (these were super helpful once I got them to work. I'm proud to say that all of Aristotl's **user data** is stored within Okta - no external database needed!)
+- Other standard but cool features of the React library or the Node.js SDK: protected routes, verifying requests, verifying websocket connections, etc.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+### Twilio
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+This was _not_ the first time I used twilio, and so it was great to get the update that twilio joined in as a sponsor for this hackathon! Thanks Twilio for the credits and for your awesome APIs!
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+In this project, twilio was used in two ways:
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+- Programmable SMS for the alerts to inactive users
+- Programmable Video for the audio/video conferencing option
 
-## Learn More
+## How I built it
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify

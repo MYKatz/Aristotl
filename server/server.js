@@ -86,6 +86,7 @@ io = io.listen(server);
 async function replyWithDialogFlow(socket, msg){
     var responses = await df.sendTextMessageToDialogFlow(msg, socket.id);
     //console.log(responses[0].queryResult.fulfillmentText);
+    console.log("replying with dialog flow");
     io.to(socket.id).emit("chat", responses[0].queryResult.fulfillmentText);
     if(responses[0].queryResult.action == "Initializeproblem.Initializeproblem-yes" && currentSockets[socket.id]){
         var newProblem = new Problem();
@@ -133,6 +134,7 @@ async function replyWithDialogFlow(socket, msg){
 
 io.on("connection", function(socket){
     socket.on("chat", function(msg){
+        console.log("NEW MESSAGE TO CHATBOT: " + msg);
         var sentiment = vader.SentimentIntensityAnalyzer.polarity_scores(msg).compound; //vader sentiment compount score.. negative<-.05<neutral<.05<positive
         if(currentSockets[socket.id].VADER == 0.){
             //initialize vader score

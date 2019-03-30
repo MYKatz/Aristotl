@@ -6,9 +6,9 @@ const LANGUAGE_CODE = 'en-US'
 class DialogFlow {
 	constructor (projectId) {
 		this.projectId = projectId;
-
-		let privateKey = process.env.DLF_PKEY; //(process.env.NODE_ENV=="production") ? JSON.parse(process.env.DLF_PKEY) : process.env.DLF_PKEY;
-        let clientEmail = process.env.DLF_EMAIL;
+		let privateKey = process.env.DLF_PKEY.replace(/\\n/g, '\n'); //(process.env.NODE_ENV=="production") ? JSON.parse(process.env.DLF_PKEY) : process.env.DLF_PKEY;
+		console.log(privateKey);
+    let clientEmail = process.env.DLF_EMAIL;
 		let config = {
 			credentials: {
 				private_key: privateKey,
