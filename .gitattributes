@@ -1,3 +1,2 @@
 * linguist-vendored
-client/css/bulma.min.css linguist-vendored=false
-landing/css/main.css linguist-vendored=false
+*.css linguist-vendored=false
